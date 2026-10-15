@@ -3,7 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  // Local: sqlite. Deploy: set provider to "postgresql" + Supabase DATABASE_URL
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
