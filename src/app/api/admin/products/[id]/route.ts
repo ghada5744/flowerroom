@@ -17,6 +17,7 @@ const schema = z.object({
   slug: z.string().optional(),
   description: z.string().min(1),
   imageUrl: z.string().nullable().optional(),
+  images: z.array(z.string().min(1)).optional(),
   badge: z.string().nullable().optional(),
   categoryId: z.string().min(1),
   active: z.boolean(),
@@ -55,6 +56,8 @@ export async function PUT(req: Request, ctx: Ctx) {
         ? await uniqueProductSlug(body.name, id)
         : existing.slug;
 
+    const urls = (body.images?.length ? body.images : body.imageUrl ? [body.imageUrl] : []).filter(Boolean);
+
     await prisma.$transaction(async (tx) => {
       await tx.product.update({
         where: { id },
@@ -62,7 +65,7 @@ export async function PUT(req: Request, ctx: Ctx) {
           name: body.name,
           slug,
           description: body.description,
-          imageUrl: body.imageUrl || null,
+          imageUrl: urls[0] || null,
           badge: body.badge || null,
           categoryId: body.categoryId,
           active: body.active,
@@ -71,6 +74,13 @@ export async function PUT(req: Request, ctx: Ctx) {
           ...(body.specs !== undefined ? { specs: body.specs || null } : {}),
         },
       });
+
+      await tx.productImage.deleteMany({ where: { productId: id } });
+      if (urls.length) {
+        await tx.productImage.createMany({
+          data: urls.map((url, i) => ({ productId: id, url, sortOrder: i })),
+        });
+      }
 
       await tx.productVariant.deleteMany({ where: { productId: id } });
       await tx.productVariant.createMany({

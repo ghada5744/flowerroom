@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ImageUpload } from "@/components/admin/ImageUpload";
+import { GalleryEditor } from "@/components/admin/GalleryEditor";
 
 type Category = { id: string; name: string };
 type VariantInput = { id?: string; name: string; priceNaira: string };
@@ -18,6 +18,7 @@ type Props = {
     active: boolean;
     featured: boolean;
     categoryId: string;
+    images?: { url: string }[];
     variants: { id: string; name: string; priceKobo: number; color: string | null }[];
   };
 };
@@ -26,7 +27,10 @@ export function ProductForm({ categories, product }: Props) {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(product?.imageUrl || null);
+  const [images, setImages] = useState<string[]>(
+    product?.images?.map((img) => img.url).filter(Boolean) ||
+      (product?.imageUrl ? [product.imageUrl] : []),
+  );
   const [variants, setVariants] = useState<VariantInput[]>(
     product?.variants.map((v) => ({
       id: v.id,
@@ -43,7 +47,8 @@ export function ProductForm({ categories, product }: Props) {
     const payload = {
       name: form.get("name"),
       description: form.get("description"),
-      imageUrl,
+      images,
+      imageUrl: images[0] || null,
       badge: form.get("badge") || null,
       categoryId: form.get("categoryId"),
       active: form.get("active") === "on",
@@ -115,7 +120,7 @@ export function ProductForm({ categories, product }: Props) {
         </p>
       </div>
 
-      <ImageUpload value={imageUrl} onChange={setImageUrl} folder="products" label="Product photo" />
+      <GalleryEditor value={images} onChange={setImages} />
 
       <div>
         <label className="label" htmlFor="description">

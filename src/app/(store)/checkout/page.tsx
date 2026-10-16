@@ -77,9 +77,10 @@ export default function CheckoutPage() {
   return (
     <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 lg:grid-cols-[1.2fr_0.8fr]">
       <div>
-        <h1 className="font-display text-4xl">Checkout</h1>
-        <p className="mt-2 text-sm text-muted">
-          Pay securely online with Paystack. We&apos;ll confirm and send a video approval before delivery.
+        <p className="text-[11px] font-semibold tracking-[0.18em] text-magenta uppercase">Secure checkout</p>
+        <h1 className="mt-2 font-display text-5xl">Checkout</h1>
+        <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">
+          Pay with Paystack (cards and bank transfer in Naira). We confirm the order and send a video of the arrangement before delivery.
         </p>
         {!user && (
           <p className="mt-4 text-sm text-muted">
@@ -99,7 +100,7 @@ export default function CheckoutPage() {
             Signed in as <span className="font-medium text-ink">{user.email}</span> — your details are prefilled.
           </p>
         )}
-        <form onSubmit={onSubmit} className="mt-8 space-y-8" key={user?.id || "guest"}>
+        <form onSubmit={onSubmit} className="mt-8 space-y-8 border border-[#eadfce] bg-white p-6 md:p-8" key={user?.id || "guest"}>
           <fieldset className="space-y-4">
             <legend className="text-xs tracking-[0.14em] uppercase text-magenta">Sender</legend>
             <div>
@@ -172,13 +173,16 @@ export default function CheckoutPage() {
           {error && <p className="text-sm text-magenta">{error}</p>}
 
           <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? "Redirecting to Paystack…" : `Pay ${formatNaira(subtotalKobo())}`}
+            {loading ? "Redirecting to Paystack…" : `Pay ${formatNaira(subtotalKobo())} with Paystack`}
           </button>
+          <p className="text-[12px] leading-relaxed text-muted">
+            Card details stay on Paystack. Flower Room never stores your card number.
+          </p>
         </form>
       </div>
 
-      <aside className="h-fit border border-line bg-white p-6">
-        <h2 className="font-display text-2xl">Order summary</h2>
+      <aside className="h-fit border border-[#eadfce] bg-white p-6 md:sticky md:top-28">
+        <h2 className="font-display text-3xl">Order summary</h2>
         <ul className="mt-4 space-y-3 text-sm">
           {items.map((i) => (
             <li key={i.variantId} className="flex justify-between gap-3">

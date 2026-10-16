@@ -42,10 +42,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </div>
         {ok && (
           <nav className="border-t border-line bg-[#f3eee6]/80">
-            <ul className="mx-auto flex max-w-6xl gap-5 overflow-x-auto px-4 py-3 text-xs tracking-[0.1em] uppercase">
+            <ul className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-4 py-3 text-[11px] tracking-[0.12em] uppercase">
               {LINKS.map(([href, label]) => (
                 <li key={href}>
-                  <Link href={href} className="hover:text-magenta whitespace-nowrap">
+                  <Link href={href} className="inline-block whitespace-nowrap rounded-full px-3 py-1.5 text-ink hover:bg-white hover:text-magenta">
                     {label}
                   </Link>
                 </li>

@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 type Settings = {
   brandName: string;
@@ -26,13 +27,14 @@ export function SettingsForm({ settings }: { settings: Settings }) {
   const router = useRouter();
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
+  const [heroImageUrl, setHeroImageUrl] = useState(settings.heroImageUrl || "/images/hero.jpg");
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setMsg("");
     const form = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(form.entries());
+    const payload = { ...Object.fromEntries(form.entries()), heroImageUrl };
     const res = await fetch("/api/admin/settings", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -57,7 +59,6 @@ export function SettingsForm({ settings }: { settings: Settings }) {
     ["bannerRight", "Top bar right", settings.bannerRight],
     ["heroTitle", "Hero title", settings.heroTitle],
     ["heroSubtitle", "Hero subtitle", settings.heroSubtitle],
-    ["heroImageUrl", "Hero image URL", settings.heroImageUrl],
     ["heroCtaLabel", "Hero button label", settings.heroCtaLabel],
     ["heroCtaHref", "Hero button link", settings.heroCtaHref],
   ];
@@ -69,13 +70,22 @@ export function SettingsForm({ settings }: { settings: Settings }) {
           <label className="label" htmlFor={name}>
             {label}
           </label>
-          {name.includes("Subtitle") || name.includes("Image") ? (
+          {name.includes("Subtitle") ? (
             <textarea id={name} name={name} className="input min-h-20" defaultValue={value} />
           ) : (
             <input id={name} name={name} className="input" defaultValue={value} required />
           )}
         </div>
       ))}
+      <ImageUpload
+        value={heroImageUrl}
+        onChange={(url) => setHeroImageUrl(url || "/images/hero.jpg")}
+        folder="hero"
+        label="Homepage photo"
+      />
+      <p className="-mt-2 text-[12px] text-muted">
+        The current homepage photo stays until she uploads a new one. The new file is saved with the site settings.
+      </p>
       {msg && <p className="text-sm text-magenta">{msg}</p>}
       <button type="submit" className="btn-primary" disabled={loading}>
         {loading ? "Saving…" : "Save settings"}

@@ -30,56 +30,58 @@ type Props = {
   isGiftSet?: boolean;
 };
 
-function AddonGrid({
+function hasOwnPhoto(url: string | null | undefined) {
+  if (!url) return false;
+  return url.startsWith("/uploads/") || url.includes("supabase.co");
+}
+
+function ExtraChoices({
   items,
   selectedIds,
   onToggle,
-  fallbackImg,
   showMore,
   onToggleMore,
 }: {
   items: Addon[];
   selectedIds: string[];
   onToggle: (id: string) => void;
-  fallbackImg: string;
   showMore: boolean;
   onToggleMore: () => void;
 }) {
-  const visible = showMore ? items : items.slice(0, 4);
+  const visible = showMore ? items : items.slice(0, 6);
   return (
     <>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <div className="flex flex-wrap gap-2">
         {visible.map((item) => {
           const active = selectedIds.includes(item.id);
+          const photo = hasOwnPhoto(item.imageUrl);
           return (
             <button
               key={item.id}
               type="button"
               disabled={item.backSoon}
               onClick={() => onToggle(item.id)}
-              className={`border p-2 text-left text-[12px] disabled:opacity-50 ${
-                active ? "border-black" : "border-[#ddd]"
-              }`}
+              className={`extra-chip ${photo ? "has-photo" : ""} ${active ? "is-active" : ""}`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={item.imageUrl || fallbackImg}
-                alt=""
-                className="mb-2 aspect-square w-full object-cover"
-              />
-              <span className="block font-medium">{item.name}</span>
-              {item.backSoon ? (
-                <span className="text-[#666]">Back soon</span>
-              ) : item.priceKobo > 0 ? (
-                <span className="text-[#666]">{formatNaira(item.priceKobo)}</span>
-              ) : null}
+              {photo && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={item.imageUrl!} alt="" className="extra-chip-photo" />
+              )}
+              <span>
+                <span className="block">{item.name}</span>
+                {item.backSoon ? (
+                  <span className="extra-chip-meta">Back soon</span>
+                ) : item.priceKobo > 0 ? (
+                  <span className="extra-chip-meta">{formatNaira(item.priceKobo)}</span>
+                ) : null}
+              </span>
             </button>
           );
         })}
       </div>
-      {items.length > 4 && (
-        <button type="button" className="mt-2 text-[12px] underline" onClick={onToggleMore}>
-          {showMore ? "SHOW LESS" : "SHOW MORE"}
+      {items.length > 6 && (
+        <button type="button" className="mt-2 text-[12px] text-muted underline" onClick={onToggleMore}>
+          {showMore ? "Show less" : "Show more"}
         </button>
       )}
     </>
@@ -170,13 +172,21 @@ export function ProductConfigurator({
     router.push("/cart");
   }
 
-  const visibleCards = showMoreCards ? cards : cards.slice(0, 4);
   const showExtras = !isGiftSet && !enquireOnly;
+  const buyButton = needsWhatsApp ? (
+    <a href={`https://wa.me/${wa}?text=${waMessage}`} target="_blank" rel="noopener noreferrer" className="btn-cart">
+      Enquire on WhatsApp
+    </a>
+  ) : (
+    <button type="button" onClick={addToCart} className="btn-cart">
+      Add to cart
+    </button>
+  );
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-6">
       {!enquireOnly && (
-        <p className="text-xl font-semibold text-ink">{formatNaira(selected?.priceKobo || 0)}</p>
+        <p className="font-display text-3xl text-ink">{formatNaira(selected?.priceKobo || 0)}</p>
       )}
       {enquireOnly && (
         <p className="text-[15px] leading-relaxed text-[#555]">
@@ -184,9 +194,9 @@ export function ProductConfigurator({
         </p>
       )}
 
-      {variants.length > 0 && !enquireOnly && (
+      {variants.length > 1 && !enquireOnly && (
         <div>
-          <p className="mb-2 text-[13px] font-medium text-[#333]">Select size</p>
+          <p className="mb-2 text-[12px] font-semibold tracking-[0.12em] text-muted uppercase">Size</p>
           <div className="flex flex-wrap gap-2">
             {variants.map((v) => {
               const active = v.id === variantId;
@@ -195,11 +205,10 @@ export function ProductConfigurator({
                   key={v.id}
                   type="button"
                   onClick={() => setVariantId(v.id)}
-                  className={`border px-3 py-2.5 text-[13px] transition-colors ${
-                    active ? "border-black bg-black text-white" : "border-[#ccc] bg-white text-[#222] hover:border-black"
-                  }`}
+                  className={`option-chip ${active ? "is-active" : ""}`}
                 >
-                  {v.priceKobo > 0 ? `${v.name} (${formatNaira(v.priceKobo)})` : v.name}
+                  <span className="block">{v.name}</span>
+                  {v.priceKobo > 0 && <span className="option-chip-price">{formatNaira(v.priceKobo)}</span>}
                 </button>
               );
             })}
@@ -207,135 +216,76 @@ export function ProductConfigurator({
         </div>
       )}
 
-      {!enquireOnly && wrappers.length > 0 && (
-        <div>
-          <p className="mb-2 text-[13px] font-medium text-[#333]">Select wrapper / hatbox</p>
-          <div className="grid grid-cols-4 gap-2">
-            {wrappers.map((w) => {
-              const active = w.id === wrapperId;
-              return (
-                <button
-                  key={w.id}
-                  type="button"
-                  onClick={() => setWrapperId(w.id)}
-                  className={`border p-1 text-center text-[11px] ${active ? "border-black" : "border-[#ddd]"}`}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={w.imageUrl || "/images/roses.jpg"}
-                    alt={w.name}
-                    className="mb-1 aspect-square w-full object-cover"
-                  />
-                  {w.name}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      <div className="space-y-2">
+        {!needsWhatsApp && total !== (selected?.priceKobo || 0) && (
+          <p className="text-sm text-muted">
+            Total with options: <strong className="text-ink">{formatNaira(total)}</strong>
+          </p>
+        )}
+        {hasUnpricedExtras && !enquireOnly && (
+          <p className="text-[13px] text-[#555]">
+            An extra has no set price yet — continue on WhatsApp so we can confirm the total.
+          </p>
+        )}
+        {buyButton}
+      </div>
 
-      {showExtras && cards.length > 0 && (
-        <div>
-          <p className="mb-2 text-[13px] font-medium text-[#333]">Select card</p>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {visibleCards.map((c) => {
-              const active = c.id === cardId;
-              const isFree = c.slug === "card-message-free" || c.name.toLowerCase().includes("complimentary");
-              return (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => setCardId(c.id)}
-                  className={`border p-2 text-left text-[12px] ${active ? "border-black" : "border-[#ddd]"}`}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={c.imageUrl || "/images/ivory.jpg"}
-                    alt=""
-                    className="mb-2 aspect-[4/3] w-full object-cover"
-                  />
-                  <span className="block font-medium">{c.name}</span>
-                  {c.priceKobo > 0 ? (
-                    <span className="text-[#666]">{formatNaira(c.priceKobo)}</span>
-                  ) : isFree ? (
-                    <span className="text-[#666]">Complimentary</span>
-                  ) : null}
-                </button>
-              );
-            })}
-          </div>
-          {cards.length > 4 && (
-            <button type="button" className="mt-2 text-[12px] underline" onClick={() => setShowMoreCards((v) => !v)}>
-              {showMoreCards ? "SHOW LESS" : "SHOW MORE"}
-            </button>
+      {showExtras && (wrappers.length > 0 || cards.length > 0 || treats.length > 0 || balloons.length > 0) && (
+        <div className="space-y-5 border-t border-[#eadfce] pt-5">
+          <p className="text-[12px] font-semibold tracking-[0.14em] text-muted uppercase">Optional extras</p>
+
+          {wrappers.length > 0 && (
+            <div>
+              <p className="mb-2 text-[13px] text-[#333]">Wrapper</p>
+              <ExtraChoices
+                items={wrappers}
+                selectedIds={wrapperId ? [wrapperId] : []}
+                onToggle={setWrapperId}
+                showMore={false}
+                onToggleMore={() => undefined}
+              />
+            </div>
+          )}
+
+          {cards.length > 0 && (
+            <div>
+              <p className="mb-2 text-[13px] text-[#333]">Card</p>
+              <ExtraChoices
+                items={cards}
+                selectedIds={cardId ? [cardId] : []}
+                onToggle={setCardId}
+                showMore={showMoreCards}
+                onToggleMore={() => setShowMoreCards((v) => !v)}
+              />
+            </div>
+          )}
+
+          {treats.length > 0 && (
+            <div>
+              <p className="mb-2 text-[13px] text-[#333]">Treat</p>
+              <ExtraChoices
+                items={treats}
+                selectedIds={extraIds}
+                onToggle={toggleExtra}
+                showMore={showMoreTreats}
+                onToggleMore={() => setShowMoreTreats((v) => !v)}
+              />
+            </div>
+          )}
+
+          {balloons.length > 0 && (
+            <div>
+              <p className="mb-2 text-[13px] text-[#333]">Balloons</p>
+              <ExtraChoices
+                items={balloons}
+                selectedIds={extraIds}
+                onToggle={toggleExtra}
+                showMore={showMoreBalloons}
+                onToggleMore={() => setShowMoreBalloons((v) => !v)}
+              />
+            </div>
           )}
         </div>
-      )}
-
-      {showExtras && treats.length > 0 && (
-        <div>
-          <p className="mb-2 text-[13px] font-medium text-[#333]">Add a treat</p>
-          <p className="mb-2 text-[12px] text-muted">
-            Sweet &amp; savoury — we&apos;ll confirm prices on WhatsApp if needed.
-          </p>
-          <AddonGrid
-            items={treats}
-            selectedIds={extraIds}
-            onToggle={toggleExtra}
-            fallbackImg="/images/cake.jpg"
-            showMore={showMoreTreats}
-            onToggleMore={() => setShowMoreTreats((v) => !v)}
-          />
-        </div>
-      )}
-
-      {showExtras && balloons.length > 0 && (
-        <div>
-          <p className="mb-2 text-[13px] font-medium text-[#333]">Add balloons</p>
-          <p className="mb-2 text-[12px] text-muted">Optional helium balloons — price confirmed on WhatsApp.</p>
-          <AddonGrid
-            items={balloons}
-            selectedIds={extraIds}
-            onToggle={toggleExtra}
-            fallbackImg="/images/balloon.jpg"
-            showMore={showMoreBalloons}
-            onToggleMore={() => setShowMoreBalloons((v) => !v)}
-          />
-        </div>
-      )}
-
-      {!needsWhatsApp && (
-        <p className="text-sm text-muted">
-          Total with options: <strong className="text-ink">{formatNaira(total)}</strong>
-        </p>
-      )}
-      {hasUnpricedExtras && !enquireOnly && (
-        <p className="text-[13px] text-[#555]">
-          You selected extras without a set price — continue on WhatsApp so we can confirm the total.
-        </p>
-      )}
-
-      {needsWhatsApp ? (
-        <a
-          href={`https://wa.me/${wa}?text=${waMessage}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex w-full items-center justify-center gap-2 bg-black px-6 py-3.5 text-[14px] font-medium tracking-wide text-white hover:bg-[#222] sm:w-auto"
-        >
-          Enquire on WhatsApp
-        </a>
-      ) : (
-        <button
-          type="button"
-          onClick={addToCart}
-          className="inline-flex w-full items-center justify-center gap-2 bg-black px-6 py-3.5 text-[14px] font-medium tracking-wide text-white hover:bg-[#222] sm:w-auto"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <path d="M6 7h15l-1.4 9H7.2L6 7z" />
-            <path d="M6 7L5 3H2" />
-          </svg>
-          Add to cart
-        </button>
       )}
     </div>
   );

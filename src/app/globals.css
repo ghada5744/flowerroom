@@ -115,6 +115,21 @@ a {
   background: var(--magenta-hover);
 }
 
+.cart-summary {
+  margin-top: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.7rem;
+}
+
+.cart-checkout {
+  min-width: 220px;
+  justify-content: center;
+  padding: 0.85rem 1.75rem;
+  letter-spacing: 0.08em;
+}
+
 .btn-ghost {
   display: inline-flex;
   align-items: center;
@@ -525,26 +540,213 @@ a {
   background: #efe8df;
 }
 
-/* Product detail image — slightly under full column width */
-.product-detail-media {
+.product-gallery {
   width: 100%;
-  max-width: 520px;
 }
 
-@media (min-width: 768px) {
-  .product-detail-media {
+@media (min-width: 1024px) {
+  .product-gallery {
     position: sticky;
-    top: 8.5rem;
+    top: 7.5rem;
   }
 }
 
-.product-detail-img {
+.product-gallery-stage {
+  position: relative;
+  overflow: hidden;
+  background: #efe8df;
+  border-radius: 2px;
+}
+
+.product-gallery-badge {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  z-index: 2;
+  background: #fff;
+  padding: 0.35rem 0.55rem;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 18px rgba(26, 26, 26, 0.08);
+}
+
+.product-gallery-main {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 3;
-  max-height: 440px;
+  max-height: 460px;
   object-fit: cover;
   object-position: center;
+  animation: gallery-in 0.35s ease;
+}
+
+@keyframes gallery-in {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+
+.product-gallery-thumbs {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+  overflow-x: auto;
+  padding-bottom: 0.2rem;
+}
+
+.product-gallery-thumb {
+  flex: 0 0 auto;
+  padding: 2px;
+  border: 1px solid transparent;
+  background: #efe8df;
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0.45;
+  filter: saturate(0.7);
+  transition: opacity 0.2s ease, border-color 0.2s ease, filter 0.2s ease;
+}
+
+.product-gallery-thumb.is-short {
+  width: 72px;
+  height: 64px;
+}
+
+.product-gallery-thumb.is-tall {
+  width: 84px;
+  height: 92px;
+}
+
+.product-gallery-thumb:hover {
+  opacity: 0.8;
+  filter: none;
+}
+
+.product-gallery-thumb.is-active {
+  border-color: #1a1a1a;
+  opacity: 1;
+  filter: none;
+}
+
+.product-gallery-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-detail-copy .btn-cart,
+.btn-cart {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--magenta);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 1rem 1.6rem;
+}
+
+.btn-cart:hover {
+  background: var(--magenta-hover);
+}
+
+@media (min-width: 640px) {
+  .btn-cart {
+    width: auto;
+    min-width: 220px;
+  }
+}
+
+.option-chip {
+  border: 1px solid #d8d2c8;
+  background: #fff;
+  color: #222;
+  padding: 0.7rem 0.95rem;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.option-chip:hover {
+  border-color: #1a1a1a;
+}
+
+.option-chip.is-active {
+  border-color: #1a1a1a;
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.option-chip-price {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+.extra-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid #e0d8cc;
+  background: #fff;
+  color: #222;
+  padding: 0.45rem 0.7rem;
+  font-size: 12.5px;
+  line-height: 1.25;
+  cursor: pointer;
+  text-align: left;
+}
+
+.extra-chip:hover {
+  border-color: #1a1a1a;
+}
+
+.extra-chip.is-active {
+  border-color: #1a1a1a;
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.extra-chip.has-photo {
+  flex-direction: column;
+  align-items: stretch;
+  width: 112px;
+  gap: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.extra-chip.has-photo > span {
+  padding: 0.45rem 0.4rem 0.55rem;
+}
+
+.extra-chip-photo {
+  display: block;
+  width: 100%;
+  height: 84px;
+  object-fit: cover;
+}
+
+.extra-chip-meta {
+  display: block;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.panel-soft {
+  border: 1px solid #eadfce;
+  background: #fff;
+  border-radius: 2px;
 }
 
 /* Related products — between compact and full shop grid */

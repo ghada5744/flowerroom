@@ -29,9 +29,12 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md">
-      <h1 className="font-display text-3xl">Admin login</h1>
-      <p className="mt-2 text-sm text-muted">Enter the admin password to manage products and orders.</p>
+    <div className="mx-auto mt-6 max-w-md border border-line bg-white px-8 py-10 shadow-[0_18px_50px_rgba(26,26,26,0.06)]">
+      <p className="text-[11px] font-semibold tracking-[0.2em] text-magenta uppercase">Staff</p>
+      <h1 className="mt-2 font-display text-4xl">Admin login</h1>
+      <p className="mt-2 text-sm leading-relaxed text-muted">
+        Manage products, photos, orders and customers. This is separate from the customer sign-in.
+      </p>
       <form onSubmit={onSubmit} className="mt-8 space-y-4">
         <div>
           <label className="label" htmlFor="password">
@@ -40,7 +43,7 @@ export default function AdminLoginPage() {
           <input id="password" name="password" type="password" className="input" required />
         </div>
         {error && <p className="text-sm text-magenta">{error}</p>}
-        <button type="submit" className="btn-primary" disabled={loading}>
+        <button type="submit" className="btn-primary w-full" disabled={loading}>
           {loading ? "Signing in…" : "Sign in"}
         </button>
       </form>

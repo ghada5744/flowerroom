@@ -73,11 +73,11 @@ export default function CartPage() {
           </li>
         ))}
       </ul>
-      <div className="mt-8 flex flex-col items-end gap-4">
-        <p className="text-lg">
+      <div className="cart-summary">
+        <p className="text-[15px] tracking-wide">
           Subtotal: <strong className="text-magenta">{formatNaira(subtotalKobo())}</strong>
         </p>
-        <Link href="/checkout" className="btn-primary">
+        <Link href="/checkout" className="btn-primary cart-checkout">
           Proceed to checkout
         </Link>
       </div>

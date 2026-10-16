@@ -17,6 +17,7 @@ const schema = z.object({
   slug: z.string().optional(),
   description: z.string().min(1),
   imageUrl: z.string().nullable().optional(),
+  images: z.array(z.string().min(1)).optional(),
   badge: z.string().nullable().optional(),
   categoryId: z.string().min(1),
   active: z.boolean(),
@@ -44,12 +45,16 @@ export async function POST(req: Request) {
   try {
     const body = schema.parse(await req.json());
     const slug = body.slug?.trim() ? slugify(body.slug) : await uniqueProductSlug(body.name);
+    const urls = (body.images?.length ? body.images : body.imageUrl ? [body.imageUrl] : []).filter(Boolean);
     const product = await prisma.product.create({
       data: {
         name: body.name,
         slug,
         description: body.description,
-        imageUrl: body.imageUrl || null,
+        imageUrl: urls[0] || null,
+        images: {
+          create: urls.map((url, i) => ({ url, sortOrder: i })),
+        },
         badge: body.badge || null,
         categoryId: body.categoryId,
         active: body.active,

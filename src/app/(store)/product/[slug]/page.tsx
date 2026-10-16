@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductConfigurator } from "@/components/ProductConfigurator";
+import { ProductGallery } from "@/components/ProductGallery";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -21,6 +22,7 @@ export default async function ProductPage({ params }: Props) {
       where: { slug },
       include: {
         category: true,
+        images: { orderBy: { sortOrder: "asc" } },
         variants: { where: { active: true }, orderBy: { sortOrder: "asc" } },
       },
     }),
@@ -37,46 +39,37 @@ export default async function ProductPage({ params }: Props) {
   if (!product || !product.active) notFound();
 
   const isGiftSet = product.category.slug === "gift-sets";
+  const gallery =
+    product.images.length > 0
+      ? product.images.map((img) => img.url)
+      : product.imageUrl
+        ? [product.imageUrl]
+        : [];
 
   return (
-    <div className="site-wrap py-8 md:py-12">
-      <p className="text-[13px] text-muted">
+    <div className="site-wrap py-8 md:py-14">
+      <p className="text-[12px] tracking-[0.08em] text-muted uppercase">
         <Link href="/" className="hover:text-magenta">
           Home
         </Link>
-        {" · "}
+        <span className="px-2 text-[#c8c0b6]">/</span>
         <Link href={`/shop/${product.category.slug}`} className="hover:text-magenta">
           {product.category.name}
         </Link>
-        {" · "}
-        {product.name}
+        <span className="px-2 text-[#c8c0b6]">/</span>
+        <span className="text-ink">{product.name}</span>
       </p>
 
-      <div className="mt-6 grid gap-10 md:grid-cols-2 md:gap-12 md:items-start">
-        <div className="product-detail-media">
-          <div className="relative overflow-hidden bg-[#f3eee6]">
-            {product.badge && (
-              <span className="absolute right-3 top-3 z-10 bg-white px-2 py-1 text-[10px] font-semibold uppercase tracking-wide shadow-sm">
-                {product.badge}
-              </span>
-            )}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={
-                product.imageUrl || "/images/lilac.jpg"
-              }
-              alt={product.name}
-              className="product-detail-img"
-            />
-          </div>
-        </div>
+      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 lg:items-start">
+        <ProductGallery images={gallery} name={product.name} badge={product.badge} />
 
-        <div>
-          <h1 className="font-display text-4xl text-ink md:text-5xl">{product.name}</h1>
-          <p className="mt-5 leading-relaxed text-[#444]">{product.description}</p>
+        <div className="product-detail-copy">
+          <p className="text-[11px] font-semibold tracking-[0.18em] text-magenta uppercase">{product.category.name}</p>
+          <h1 className="mt-2 font-display text-[2.6rem] leading-[1.05] text-ink md:text-5xl">{product.name}</h1>
+          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[#4a4a4a]">{product.description}</p>
 
           {isGiftSet && (
-            <div className="mt-5 border border-[#e8e2d8] bg-white px-4 py-3 text-sm text-[#333]">
+            <div className="panel-soft mt-5 px-4 py-3.5 text-sm text-[#333]">
               <p className="font-semibold text-magenta">Included in the set price</p>
               <ul className="mt-2 list-disc space-y-1 pl-5">
                 <li>Flower arrangement</li>
@@ -90,13 +83,13 @@ export default async function ProductPage({ params }: Props) {
             </div>
           )}
 
-          <div className="mt-4 border border-[#e8e2d8] bg-[#faf6ef] px-4 py-3 text-sm text-ink">
-            <strong className="text-magenta">Video Approval:</strong>{" "}
+          <p className="mt-4 text-[13px] leading-relaxed text-muted">
+            <span className="font-medium text-magenta">Video approval.</span>{" "}
             {product.videoNote ||
               "Once arranged, your florist will send a video via WhatsApp or email for your approval before delivery."}
-          </div>
+          </p>
 
-          <div className="mt-8">
+          <div className="mt-6">
             <ProductConfigurator
               productId={product.id}
               slug={product.slug}

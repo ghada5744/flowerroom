@@ -17,19 +17,19 @@ export default async function MyAccountPage() {
   });
 
   return (
-    <div className="site-wrap py-12">
+    <div className="site-wrap py-14">
       <div className="mx-auto max-w-3xl">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs tracking-[0.14em] uppercase text-magenta">My Account</p>
-            <h1 className="mt-2 font-display text-4xl">Hello, {user.name.split(" ")[0]}</h1>
+            <p className="text-[11px] font-semibold tracking-[0.18em] text-magenta uppercase">My Account</p>
+            <h1 className="mt-2 font-display text-5xl">Hello, {user.name.split(" ")[0]}</h1>
             <p className="mt-2 text-sm text-muted">{user.email}</p>
           </div>
           <AccountLogoutButton />
         </div>
 
-        <section className="mt-10 border border-line bg-white p-6">
-          <h2 className="font-display text-2xl">Account details</h2>
+        <section className="mt-10 border border-[#eadfce] bg-white p-6 md:p-8">
+          <h2 className="font-display text-3xl">Account details</h2>
           <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
             <div>
               <dt className="text-muted">Name</dt>
@@ -50,9 +50,9 @@ export default async function MyAccountPage() {
           </dl>
         </section>
 
-        <section className="mt-8 border border-line bg-white p-6">
+        <section className="mt-6 border border-[#eadfce] bg-white p-6 md:p-8">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="font-display text-2xl">My orders</h2>
+            <h2 className="font-display text-3xl">My orders</h2>
             <Link href="/shop" className="text-sm text-magenta hover:underline">
               Continue shopping
             </Link>
