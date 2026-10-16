@@ -66,12 +66,12 @@ export function Footer({ settings }: { settings: Settings }) {
       </div>
 
       <div className="site-wrap py-12">
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div className="footer-brand mb-8 flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="font-display text-[1.5rem] font-semibold tracking-[0.12em]">{settings.brandName}</p>
             <p className="mt-1 text-[10px] tracking-[0.28em] uppercase text-[#666]">{settings.tagline}</p>
           </div>
-          <div className="header-socials">
+          <div className="footer-socials">
             <a href={settings.facebookUrl} target="_blank" rel="noreferrer" aria-label="Facebook">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden>
                 <path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H9v3h2v7h3v-7h3l1-3h-4V9c0-.6.4-1 1-1z" />
@@ -90,10 +90,13 @@ export function Footer({ settings }: { settings: Settings }) {
           </div>
         </div>
 
-        <div className="grid gap-8 text-sm text-muted sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
-          <div>
-            <p className="mb-3 font-bold text-ink">Flower Room</p>
-            <ul className="space-y-2">
+        <div className="footer-links">
+          <details className="footer-acc">
+            <summary>
+              <span>Flower Room</span>
+              <span className="footer-acc-icon" aria-hidden />
+            </summary>
+            <ul>
               <li>
                 <Link href="/" className="hover:text-magenta">
                   Home
@@ -120,10 +123,13 @@ export function Footer({ settings }: { settings: Settings }) {
                 </Link>
               </li>
             </ul>
-          </div>
-          <div>
-            <p className="mb-3 font-bold text-ink">Delivery</p>
-            <ul className="space-y-2">
+          </details>
+          <details className="footer-acc">
+            <summary>
+              <span>Delivery</span>
+              <span className="footer-acc-icon" aria-hidden />
+            </summary>
+            <ul>
               <li>Lagos Island</li>
               <li>Lagos Mainland</li>
               <li>Lekki</li>
@@ -131,10 +137,13 @@ export function Footer({ settings }: { settings: Settings }) {
               <li>Ikeja</li>
               <li>Same-day Lagos</li>
             </ul>
-          </div>
-          <div>
-            <p className="mb-3 font-bold text-ink">Info</p>
-            <ul className="space-y-2">
+          </details>
+          <details className="footer-acc">
+            <summary>
+              <span>Info</span>
+              <span className="footer-acc-icon" aria-hidden />
+            </summary>
+            <ul>
               <li>
                 <Link href="/account" className="hover:text-magenta">
                   My Account
@@ -156,10 +165,13 @@ export function Footer({ settings }: { settings: Settings }) {
                 </Link>
               </li>
             </ul>
-          </div>
-          <div>
-            <p className="mb-3 font-bold text-ink">Services</p>
-            <ul className="space-y-2">
+          </details>
+          <details className="footer-acc">
+            <summary>
+              <span>Services</span>
+              <span className="footer-acc-icon" aria-hidden />
+            </summary>
+            <ul>
               <li>
                 <Link href="/shop/events-bridal" className="hover:text-magenta">
                   Wedding Flowers
@@ -181,10 +193,13 @@ export function Footer({ settings }: { settings: Settings }) {
                 </Link>
               </li>
             </ul>
-          </div>
-          <div>
-            <p className="mb-3 font-bold text-ink">Occasion</p>
-            <ul className="space-y-2">
+          </details>
+          <details className="footer-acc">
+            <summary>
+              <span>Occasion</span>
+              <span className="footer-acc-icon" aria-hidden />
+            </summary>
+            <ul>
               <li>
                 <Link href="/shop/gift-sets" className="hover:text-magenta">
                   Birthday
@@ -211,10 +226,13 @@ export function Footer({ settings }: { settings: Settings }) {
                 </Link>
               </li>
             </ul>
-          </div>
-          <div>
-            <p className="mb-3 font-bold text-ink">Collection</p>
-            <ul className="space-y-2">
+          </details>
+          <details className="footer-acc">
+            <summary>
+              <span>Collection</span>
+              <span className="footer-acc-icon" aria-hidden />
+            </summary>
+            <ul>
               <li>
                 <Link href="/shop/hand-tied-bouquets" className="hover:text-magenta">
                   Hand-tied
@@ -241,16 +259,19 @@ export function Footer({ settings }: { settings: Settings }) {
                 </Link>
               </li>
             </ul>
-          </div>
-          <div>
-            <p className="mb-3 font-bold text-ink">Upcoming</p>
-            <ul className="space-y-2">
+          </details>
+          <details className="footer-acc">
+            <summary>
+              <span>Upcoming</span>
+              <span className="footer-acc-icon" aria-hidden />
+            </summary>
+            <ul>
               <li>Mother&apos;s Day</li>
               <li>Valentine&apos;s Day</li>
               <li>Graduation</li>
               <li>Eid Flowers</li>
             </ul>
-          </div>
+          </details>
         </div>
       </div>
 

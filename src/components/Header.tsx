@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-store";
+import { ShopSidebar } from "@/components/ShopSidebar";
 
 const NAV = [
   { href: "/shop", label: "Our Complete Range" },
@@ -26,14 +27,20 @@ type Settings = {
 };
 
 type CustomerUser = { id: string; name: string; email: string } | null;
+type CategoryLink = { name: string; slug: string };
 
-export function Header({ settings }: { settings: Settings }) {
+export function Header({ settings, categories }: { settings: Settings; categories: CategoryLink[] }) {
   const count = useCart((s) => s.items.reduce((n, i) => n + i.quantity, 0));
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [user, setUser] = useState<CustomerUser>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     setMounted(true);
@@ -177,15 +184,7 @@ export function Header({ settings }: { settings: Settings }) {
 
       {open && (
         <nav className="mobile-nav" aria-label="Menu">
-          <ul>
-            {NAV.map((item) => (
-              <li key={item.label}>
-                <Link href={item.href} onClick={() => setOpen(false)}>
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <ShopSidebar categories={categories} />
         </nav>
       )}
     </header>

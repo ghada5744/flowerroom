@@ -1,12 +1,15 @@
+import { Suspense } from "react";
 import { ProductCard } from "@/components/ProductCard";
 import { ShopSidebar } from "@/components/ShopSidebar";
+import { ShopSort } from "@/components/ShopSort";
 import { prisma } from "@/lib/prisma";
+import { sortProducts } from "@/lib/sort-products";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = { title: "Our Complete Range" };
 
-type Props = { searchParams: Promise<{ q?: string; min?: string; max?: string }> };
+type Props = { searchParams: Promise<{ q?: string; min?: string; max?: string; sort?: string }> };
 
 export default async function ShopAllPage({ searchParams }: Props) {
   const sp = await searchParams;
@@ -27,13 +30,25 @@ export default async function ShopAllPage({ searchParams }: Props) {
   const min = sp.min ? Number(sp.min) * 100 : null;
   const max = sp.max ? Number(sp.max) * 100 : null;
   // Complete Range = flower products with prices (not enquire-only treats/events in the main grid)
-  const filtered = products.filter((p) => {
+  const matched = products.filter((p) => {
     const price = p.variants[0]?.priceKobo ?? 0;
     if (price <= 0) return false;
     if (min != null && price < min) return false;
     if (max != null && price > max) return false;
     return true;
   });
+  const sales =
+    sp.sort === "best"
+      ? new Map(
+          (
+            await prisma.orderItem.groupBy({
+              by: ["productId"],
+              _sum: { quantity: true },
+            })
+          ).map((row) => [row.productId, row._sum.quantity ?? 0]),
+        )
+      : undefined;
+  const filtered = sortProducts(matched, sp.sort, sales);
 
   return (
     <div className="site-wrap py-10 md:py-14">
@@ -45,6 +60,9 @@ export default async function ShopAllPage({ searchParams }: Props) {
           <ShopSidebar categories={categories} />
         </aside>
         <div className="main-rail-right">
+          <Suspense fallback={null}>
+            <ShopSort />
+          </Suspense>
           <div className="product-grid">
             {filtered.map((p) => (
               <ProductCard
