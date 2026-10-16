@@ -1495,3 +1495,124 @@ a {
   line-height: 1.6;
   color: #444;
 }
+
+.coming-soon {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+  background: #faf6ef;
+  overflow: hidden;
+}
+
+.coming-soon-photo {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(250, 246, 239, 0.2), rgba(250, 246, 239, 0.82)),
+    url("/images/hero.jpg") center / cover no-repeat;
+}
+
+.coming-soon-veil {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(250, 246, 239, 0.2), rgba(250, 246, 239, 0.88) 70%);
+}
+
+.coming-soon-card {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 460px);
+  text-align: center;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(226, 216, 204, 0.9);
+  padding: 3rem 1.75rem 2.5rem;
+  box-shadow: 0 24px 60px rgba(26, 26, 26, 0.08);
+}
+
+.coming-soon-brand {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.4rem, 6vw, 3.4rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+}
+
+.coming-soon-tag {
+  margin: 0.7rem 0 0;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #6b6b6b;
+}
+
+.coming-soon-rule {
+  width: 42px;
+  height: 1px;
+  margin: 1.4rem auto 1.2rem;
+  background: #c2185b;
+}
+
+.coming-soon-card h1 {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.coming-soon-copy {
+  margin: 1rem auto 0;
+  max-width: 34rem;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #4a4a4a;
+}
+
+.coming-soon-wa {
+  display: inline-flex;
+  margin-top: 1.6rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 999px;
+  background: #c2185b;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.coming-soon-wa:hover {
+  background: #a0144c;
+}
+
+@media (max-width: 640px) {
+  .coming-soon {
+    padding: 1.25rem 1rem;
+  }
+
+  .coming-soon-card {
+    padding: 2.25rem 1.15rem 2rem;
+  }
+
+  .coming-soon-brand {
+    font-size: 1.85rem;
+    letter-spacing: 0.1em;
+  }
+
+  .coming-soon-tag {
+    letter-spacing: 0.18em;
+    font-size: 10px;
+  }
+
+  .coming-soon-card h1 {
+    font-size: 2.15rem;
+  }
+
+  .coming-soon-copy {
+    font-size: 14.5px;
+  }
+}
