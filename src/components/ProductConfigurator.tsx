@@ -197,7 +197,7 @@ export function ProductConfigurator({
       {variants.length > 1 && !enquireOnly && (
         <div>
           <p className="mb-2 text-[12px] font-semibold tracking-[0.12em] text-muted uppercase">Size</p>
-          <div className="flex flex-wrap gap-2">
+          <div className="size-options">
             {variants.map((v) => {
               const active = v.id === variantId;
               return (

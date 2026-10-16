@@ -67,7 +67,7 @@ export function Header({ settings }: { settings: Settings }) {
 
       {/* Full-width separator above the category nav — not under the tagline */}
       <div className="border-b border-[#2e2e2e] bg-[#faf6ef]">
-        <div className="site-wrap grid grid-cols-[1fr_auto_1fr] items-start gap-3 pb-8 pt-5 md:pb-10 md:pt-7">
+        <div className="site-wrap header-brand-row grid grid-cols-[auto_1fr_auto] items-center gap-2 pb-4 pt-3 md:grid-cols-[1fr_auto_1fr] md:items-start md:gap-3 md:pb-10 md:pt-7">
           <div className="flex flex-col items-start gap-2 pt-1">
             <div className="header-socials hidden sm:flex">
               <a href={settings.facebookUrl} aria-label="Facebook" target="_blank" rel="noreferrer">
@@ -88,7 +88,7 @@ export function Header({ settings }: { settings: Settings }) {
             </div>
             <a
               href={`tel:${settings.phone.replace(/\s/g, "")}`}
-              className="text-[14px] text-[#333] hover:underline hover:underline-offset-2"
+              className="hidden text-[14px] text-[#333] hover:underline hover:underline-offset-2 sm:inline"
             >
               {settings.phone}
             </a>
@@ -100,10 +100,10 @@ export function Header({ settings }: { settings: Settings }) {
           </div>
 
           <Link href="/" className="brand-lockup text-center pt-0.5 no-underline hover:no-underline">
-            <span className="font-display block text-[1.9rem] leading-none tracking-[0.16em] text-ink no-underline md:text-[2.65rem]">
+            <span className="font-display block text-[1.35rem] leading-none tracking-[0.12em] text-ink no-underline sm:text-[1.9rem] sm:tracking-[0.16em] md:text-[2.65rem]">
               {settings.brandName}
             </span>
-            <span className="brand-tagline mt-2 text-[10px] tracking-[0.36em] text-[#333] uppercase no-underline md:text-[11px]">
+            <span className="brand-tagline mt-1 text-[8px] tracking-[0.22em] text-[#333] uppercase no-underline sm:mt-2 sm:text-[10px] sm:tracking-[0.36em] md:text-[11px]">
               {settings.tagline}
             </span>
           </Link>
@@ -162,6 +162,9 @@ export function Header({ settings }: { settings: Settings }) {
 
       {open && (
         <div className="border-b border-line bg-white px-4 py-4 md:hidden">
+          <a href={`tel:${settings.phone.replace(/\s/g, "")}`} className="mb-3 block text-sm text-[#333] sm:hidden">
+            {settings.phone}
+          </a>
           <ul className="space-y-3 text-sm">
             {NAV.map((item) => (
               <li key={item.label}>
