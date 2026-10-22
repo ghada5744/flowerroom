@@ -1,6 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendPaidOrderEmails } from "@/lib/order-email";
 import { isPaystackConfigured, verifyPaystack } from "@/lib/paystack";
+
+async function notifyPaid(orderId: string) {
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: { items: true },
+  });
+  if (!order) return;
+  try {
+    await sendPaidOrderEmails(order);
+  } catch (err) {
+    console.error("Order email failed", err);
+  }
+}
 
 export async function GET(req: NextRequest) {
   const reference = req.nextUrl.searchParams.get("reference");
@@ -21,6 +35,7 @@ export async function GET(req: NextRequest) {
     }
 
     if (!isPaystackConfigured()) {
+      const alreadyPaid = payment.status === "demo_paid" || payment.status === "paid";
       await prisma.$transaction([
         prisma.payment.update({
           where: { id: payment.id },
@@ -31,6 +46,7 @@ export async function GET(req: NextRequest) {
           data: { status: "PAID" },
         }),
       ]);
+      if (!alreadyPaid) await notifyPaid(payment.orderId);
       return NextResponse.redirect(
         `${siteUrl}/order/success?reference=${reference}&order=${payment.order.orderNumber}`,
       );
@@ -38,6 +54,7 @@ export async function GET(req: NextRequest) {
 
     const verified = await verifyPaystack(reference);
     if (verified.status === "success" && verified.amount === payment.amountKobo) {
+      const alreadyPaid = payment.status === "paid" || payment.status === "demo_paid";
       await prisma.$transaction([
         prisma.payment.update({
           where: { id: payment.id },
@@ -53,6 +70,7 @@ export async function GET(req: NextRequest) {
           data: { status: "PAID" },
         }),
       ]);
+      if (!alreadyPaid) await notifyPaid(payment.orderId);
       return NextResponse.redirect(
         `${siteUrl}/order/success?reference=${reference}&order=${payment.order.orderNumber}`,
       );
