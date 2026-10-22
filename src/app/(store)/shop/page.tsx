@@ -48,7 +48,7 @@ export default async function ShopAllPage({ searchParams }: Props) {
           ).map((row) => [row.productId, row._sum.quantity ?? 0]),
         )
       : undefined;
-  const filtered = sortProducts(matched, sp.sort, sales);
+  const filtered = sp.sort ? sortProducts(matched, sp.sort, sales) : matched;
 
   return (
     <div className="site-wrap py-10 md:py-14">

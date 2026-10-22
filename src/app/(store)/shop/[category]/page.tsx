@@ -44,7 +44,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           ).map((row) => [row.productId, row._sum.quantity ?? 0]),
         )
       : undefined;
-  const products = sortProducts(cat.products, sp.sort, sales);
+  const products = sp.sort ? sortProducts(cat.products, sp.sort, sales) : cat.products;
 
   return (
     <div className="site-wrap py-10 md:py-14">
