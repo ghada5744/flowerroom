@@ -12,6 +12,88 @@ type Settings = {
   tiktokUrl: string;
 };
 
+const FOOTER_COLUMNS: { title: string; items: { label: string; href?: string }[] }[] = [
+  {
+    title: "Flower Room",
+    items: [
+      { label: "Home", href: "/" },
+      { label: "About Us", href: "/about" },
+      { label: "How To Order", href: "/how-to-order" },
+      { label: "Flower Care", href: "/flower-care" },
+      { label: "Contact Us", href: "/contact" },
+    ],
+  },
+  {
+    title: "Delivery",
+    items: [
+      { label: "Lagos Island" },
+      { label: "Lagos Mainland" },
+      { label: "Lekki" },
+      { label: "Victoria Island" },
+      { label: "Ikeja" },
+      { label: "Same-day Lagos" },
+    ],
+  },
+  {
+    title: "Info",
+    items: [
+      { label: "My Account", href: "/account" },
+      { label: "How To Order", href: "/how-to-order" },
+      { label: "Customer Service", href: "/contact" },
+      { label: "Flower FAQ's", href: "/#faqs" },
+    ],
+  },
+  {
+    title: "Services",
+    items: [
+      { label: "Wedding Flowers", href: "/shop/events-bridal" },
+      { label: "Events", href: "/shop/events-bridal" },
+      { label: "Flowers For Your Home", href: "/shop/plants" },
+      { label: "Bespoke Flowers", href: "/contact" },
+    ],
+  },
+  {
+    title: "Occasion",
+    items: [
+      { label: "Birthday", href: "/shop/gift-sets" },
+      { label: "Anniversary", href: "/shop/gift-sets" },
+      { label: "Congratulations", href: "/shop/gift-sets" },
+      { label: "Apology", href: "/shop/gift-sets" },
+      { label: "Sympathy", href: "/shop/events-bridal" },
+    ],
+  },
+  {
+    title: "Collection",
+    items: [
+      { label: "Hand-tied", href: "/shop/hand-tied-bouquets" },
+      { label: "Hatbox", href: "/shop/signature-arrangements" },
+      { label: "Basket", href: "/shop/signature-arrangements" },
+      { label: "Treats", href: "/shop/sweet-savoury" },
+      { label: "Plants", href: "/shop/plants" },
+    ],
+  },
+  {
+    title: "Upcoming",
+    items: [
+      { label: "Mother's Day" },
+      { label: "Valentine's Day" },
+      { label: "Graduation" },
+      { label: "Eid Flowers" },
+    ],
+  },
+];
+
+function FooterItem({ item }: { item: { label: string; href?: string } }) {
+  if (!item.href) return <li>{item.label}</li>;
+  return (
+    <li>
+      <Link href={item.href} className="hover:text-magenta">
+        {item.label}
+      </Link>
+    </li>
+  );
+}
+
 function formatWhatsAppDisplay(raw: string) {
   const digits = raw.replace(/\D/g, "");
   // 2349155353128 → +234 915 535 3128
@@ -90,188 +172,33 @@ export function Footer({ settings }: { settings: Settings }) {
           </div>
         </div>
 
-        <div className="footer-links">
-          <details className="footer-acc">
-            <summary>
-              <span>Flower Room</span>
-              <span className="footer-acc-icon" aria-hidden />
-            </summary>
-            <ul>
-              <li>
-                <Link href="/" className="hover:text-magenta">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-magenta">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/how-to-order" className="hover:text-magenta">
-                  How To Order
-                </Link>
-              </li>
-              <li>
-                <Link href="/flower-care" className="hover:text-magenta">
-                  Flower Care
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-magenta">
-                  Contact Us
-                </Link>
-              </li>
-            </ul>
-          </details>
-          <details className="footer-acc">
-            <summary>
-              <span>Delivery</span>
-              <span className="footer-acc-icon" aria-hidden />
-            </summary>
-            <ul>
-              <li>Lagos Island</li>
-              <li>Lagos Mainland</li>
-              <li>Lekki</li>
-              <li>Victoria Island</li>
-              <li>Ikeja</li>
-              <li>Same-day Lagos</li>
-            </ul>
-          </details>
-          <details className="footer-acc">
-            <summary>
-              <span>Info</span>
-              <span className="footer-acc-icon" aria-hidden />
-            </summary>
-            <ul>
-              <li>
-                <Link href="/account" className="hover:text-magenta">
-                  My Account
-                </Link>
-              </li>
-              <li>
-                <Link href="/how-to-order" className="hover:text-magenta">
-                  How To Order
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-magenta">
-                  Customer Service
-                </Link>
-              </li>
-              <li>
-                <Link href="/#faqs" className="hover:text-magenta">
-                  Flower FAQ&apos;s
-                </Link>
-              </li>
-            </ul>
-          </details>
-          <details className="footer-acc">
-            <summary>
-              <span>Services</span>
-              <span className="footer-acc-icon" aria-hidden />
-            </summary>
-            <ul>
-              <li>
-                <Link href="/shop/events-bridal" className="hover:text-magenta">
-                  Wedding Flowers
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop/events-bridal" className="hover:text-magenta">
-                  Events
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop/plants" className="hover:text-magenta">
-                  Flowers For Your Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-magenta">
-                  Bespoke Flowers
-                </Link>
-              </li>
-            </ul>
-          </details>
-          <details className="footer-acc">
-            <summary>
-              <span>Occasion</span>
-              <span className="footer-acc-icon" aria-hidden />
-            </summary>
-            <ul>
-              <li>
-                <Link href="/shop/gift-sets" className="hover:text-magenta">
-                  Birthday
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop/gift-sets" className="hover:text-magenta">
-                  Anniversary
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop/gift-sets" className="hover:text-magenta">
-                  Congratulations
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop/gift-sets" className="hover:text-magenta">
-                  Apology
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop/events-bridal" className="hover:text-magenta">
-                  Sympathy
-                </Link>
-              </li>
-            </ul>
-          </details>
-          <details className="footer-acc">
-            <summary>
-              <span>Collection</span>
-              <span className="footer-acc-icon" aria-hidden />
-            </summary>
-            <ul>
-              <li>
-                <Link href="/shop/hand-tied-bouquets" className="hover:text-magenta">
-                  Hand-tied
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop/signature-arrangements" className="hover:text-magenta">
-                  Hatbox
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop/signature-arrangements" className="hover:text-magenta">
-                  Basket
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop/sweet-savoury" className="hover:text-magenta">
-                  Treats
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop/plants" className="hover:text-magenta">
-                  Plants
-                </Link>
-              </li>
-            </ul>
-          </details>
-          <details className="footer-acc">
-            <summary>
-              <span>Upcoming</span>
-              <span className="footer-acc-icon" aria-hidden />
-            </summary>
-            <ul>
-              <li>Mother&apos;s Day</li>
-              <li>Valentine&apos;s Day</li>
-              <li>Graduation</li>
-              <li>Eid Flowers</li>
-            </ul>
-          </details>
+        <div className="footer-links footer-links-desktop">
+          {FOOTER_COLUMNS.map((column) => (
+            <div key={column.title}>
+              <p className="mb-3 font-bold text-ink">{column.title}</p>
+              <ul className="space-y-2">
+                {column.items.map((item) => (
+                  <FooterItem key={item.label} item={item} />
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="footer-links footer-links-mobile">
+          {FOOTER_COLUMNS.map((column) => (
+            <details key={column.title} className="footer-acc">
+              <summary>
+                <span>{column.title}</span>
+                <span className="footer-acc-icon" aria-hidden />
+              </summary>
+              <ul>
+                {column.items.map((item) => (
+                  <FooterItem key={item.label} item={item} />
+                ))}
+              </ul>
+            </details>
+          ))}
         </div>
       </div>
 
