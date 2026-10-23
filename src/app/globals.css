@@ -271,20 +271,21 @@ a {
 
 @media (min-width: 1024px) {
   .subscribe-strip-row {
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
-    gap: 1.5rem;
+    width: 100%;
+    column-gap: 2rem;
   }
 
   .subscribe-strip-tagline {
-    flex: 0 0 auto;
     white-space: nowrap; /* keep “Sign up to get…” on one line */
+    justify-self: start;
   }
 
   .subscribe-strip-form {
-    flex: 0 0 auto;
-    margin-left: auto; /* push email + SIGN UP to the right */
     width: 22rem;
+    justify-self: end; /* push email + SIGN UP to the right */
   }
 }
 
