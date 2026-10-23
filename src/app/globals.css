@@ -235,10 +235,10 @@ a {
 .subscribe-strip {
   display: flex;
   flex-direction: column;
-  gap: 1.35rem;
+  gap: 1rem;
   align-items: stretch;
-  margin-top: 2.75rem;
-  padding: 2.75rem 0 2.5rem;
+  margin-top: 2rem;
+  padding: 1.75rem 0 2rem;
   border-top: 1px solid #e5dfd6;
 }
 
@@ -246,50 +246,45 @@ a {
   .subscribe-strip {
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    padding: 3.25rem 0 3rem;
+    justify-content: flex-start;
+    gap: 1.5rem;
   }
 }
 
 .subscribe-strip-copy {
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   min-width: 0;
 }
 
 .subscribe-strip-copy h3 {
   margin: 0;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(2rem, 3.2vw, 2.5rem);
-  font-weight: 500;
-  line-height: 1.15;
+  font-size: 1.5rem;
+  font-weight: 600;
   color: #1a1a1a;
 }
 
 .subscribe-strip-copy p {
-  margin: 0.55rem 0 0;
-  max-width: 22rem;
-  font-size: 15px;
-  line-height: 1.5;
-  color: #555;
+  margin: 0.35rem 0 0;
+  font-size: 13px;
+  color: #666;
 }
 
 .subscribe-strip-form {
   display: flex;
-  gap: 0.6rem;
-  flex: 1 1 auto;
-  min-width: min(100%, 320px);
-  max-width: 560px;
+  gap: 0.5rem;
+  flex: 0 1 420px;
+  max-width: 420px;
   width: 100%;
 }
 
 .subscribe-strip-form input {
   flex: 1;
   min-width: 0;
-  border: 1px solid #cfc8bc;
+  border: 1px solid #d0d0d0;
   background: #fff;
-  padding: 1rem 1.1rem;
-  font-size: 16px;
+  padding: 0.7rem 0.85rem;
+  font-size: 14px;
   color: #1a1a1a;
   outline: none;
 }
@@ -303,10 +298,10 @@ a {
   background: #000;
   color: #fff;
   border: none;
-  padding: 1rem 1.6rem;
-  font-size: 13px;
+  padding: 0.7rem 1.15rem;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   cursor: pointer;
 }
 
