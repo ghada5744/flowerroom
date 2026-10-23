@@ -231,24 +231,18 @@ a {
   padding-bottom: 1rem;
 }
 
-/* Subscribe under FAQ — one row on desktop: copy left, email bar to the right */
+/* Subscribe under FAQ — tagline + email bar on one line (desktop) */
 .subscribe-strip {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.5rem;
   align-items: stretch;
   width: 100%;
   margin-top: 1.75rem;
   padding: 1.5rem 0 2rem;
-  position: relative;
 }
 
-.subscribe-strip-copy {
-  flex: 0 1 auto;
-  min-width: 0;
-}
-
-.subscribe-strip-copy h3 {
+.subscribe-strip-title {
   margin: 0;
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.5rem;
@@ -256,8 +250,15 @@ a {
   color: #1a1a1a;
 }
 
-.subscribe-strip-copy p {
-  margin: 0.35rem 0 0;
+.subscribe-strip-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.subscribe-strip-tagline {
+  margin: 0;
   font-size: 13px;
   color: #666;
 }
@@ -269,25 +270,15 @@ a {
 }
 
 @media (min-width: 1024px) {
-  .subscribe-strip {
+  .subscribe-strip-row {
     flex-direction: row;
-    flex-wrap: wrap;
     align-items: center;
-    gap: 1.25rem 2rem;
+    gap: 1.5rem;
   }
 
-  .subscribe-strip-copy {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.65rem 1rem;
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  .subscribe-strip-copy p {
-    margin: 0;
+  .subscribe-strip-tagline {
+    flex: 0 0 auto;
+    white-space: nowrap; /* keep “Sign up to get…” on one line */
   }
 
   .subscribe-strip-form {

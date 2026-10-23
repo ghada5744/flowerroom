@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 
-/** Inline subscribe — copy left, email/SIGN UP on the same row (desktop). */
+/** Subscribe heading, then one row: tagline + email/SIGN UP. */
 export function SubscribeStrip() {
   const [msg, setMsg] = useState("");
 
@@ -20,15 +20,17 @@ export function SubscribeStrip() {
 
   return (
     <div className="subscribe-strip">
-      <div className="subscribe-strip-copy">
-        <h3>Subscribe</h3>
-        <p>Sign up to get the latest on sales, new releases and more.</p>
-      </div>
+      <h3 className="subscribe-strip-title">Subscribe</h3>
 
-      <form onSubmit={onSubscribe} className="subscribe-strip-form">
-        <input name="email" type="email" required placeholder="Email*" aria-label="Email" />
-        <button type="submit">SIGN UP</button>
-      </form>
+      <div className="subscribe-strip-row">
+        <p className="subscribe-strip-tagline">
+          Sign up to get the latest on sales, new releases and more.
+        </p>
+        <form onSubmit={onSubscribe} className="subscribe-strip-form">
+          <input name="email" type="email" required placeholder="Email*" aria-label="Email" />
+          <button type="submit">SIGN UP</button>
+        </form>
+      </div>
 
       {msg && <p className="subscribe-strip-msg">{msg}</p>}
     </div>
