@@ -56,7 +56,7 @@ async function send(to: string, subject: string, html: string) {
     console.warn("RESEND_API_KEY is not set, so the order email was not sent.");
     return;
   }
-  const from = process.env.RESEND_FROM || "Flower Room <orders@flowerroom.ng>";
+  const from = process.env.RESEND_FROM || "Flower Room <info@flowerroom.ng>";
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
