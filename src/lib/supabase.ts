@@ -18,6 +18,12 @@ export function getSupabaseAdmin(): SupabaseClient {
   });
 }
 
+/**
+ * Public bucket for product photos (shop must be able to display them).
+ * Write/delete are blocked for strangers via Storage RLS — only this
+ * service-role client (admin upload API) can change objects.
+ * Re-lock with: scripts/lock-storage-policies.sql
+ */
 export async function ensureUploadsBucket(admin: SupabaseClient) {
   const { data: buckets } = await admin.storage.listBuckets();
   const exists = buckets?.some((b) => b.name === BUCKET);
