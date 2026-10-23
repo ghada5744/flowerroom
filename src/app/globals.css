@@ -231,7 +231,7 @@ a {
   padding-bottom: 1rem;
 }
 
-/* Subscribe under FAQ — email/SIGN UP starts at the final "s" of header "Hand Tied Bouquets" */
+/* Subscribe under FAQ — one row on desktop: copy left, email bar to the right */
 .subscribe-strip {
   display: flex;
   flex-direction: column;
@@ -246,7 +246,6 @@ a {
 .subscribe-strip-copy {
   flex: 0 1 auto;
   min-width: 0;
-  max-width: 16rem;
 }
 
 .subscribe-strip-copy h3 {
@@ -269,76 +268,32 @@ a {
   width: min(100%, 22rem);
 }
 
-.subscribe-strip-form--desktop {
-  display: none;
-}
-
-.subscribe-strip-align {
-  display: none;
-}
-
 @media (min-width: 1024px) {
   .subscribe-strip {
-    display: grid;
-    grid-template-columns: 1fr;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 1.25rem 2rem;
   }
 
   .subscribe-strip-copy {
-    grid-column: 1;
-    grid-row: 1;
-    z-index: 1;
-  }
-
-  .subscribe-strip-form--mobile {
-    display: none;
-  }
-
-  .subscribe-strip-align {
-    display: block;
-    grid-column: 1;
-    grid-row: 1;
-    /* Break out to full main-rail width (= same content box as header cat nav) */
-    margin-left: calc(-210px - 2.5rem);
-    width: calc(100% + 210px + 2.5rem);
-    pointer-events: none;
-  }
-
-  .subscribe-nav-mirror {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 3rem; /* gap-12 — same as header cat nav */
-    font-size: 17px;
-    font-weight: 400;
-    line-height: 1.25;
-    white-space: nowrap;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.65rem 1rem;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
-  .subscribe-nav-ghost {
-    visibility: hidden;
-    flex-shrink: 0;
+  .subscribe-strip-copy p {
+    margin: 0;
   }
 
-  .subscribe-nav-ghost--anchor {
-    position: relative;
-    visibility: visible;
-    pointer-events: none;
-  }
-
-  .subscribe-nav-ghost-label {
-    visibility: hidden;
-  }
-
-  .subscribe-strip-form--desktop {
-    display: flex;
-    position: absolute;
-    left: 100%; /* start at the final "s" of Hand Tied Bouquets */
-    top: 50%;
-    transform: translateY(-50%);
+  .subscribe-strip-form {
+    flex: 0 0 auto;
+    margin-left: auto; /* push email + SIGN UP to the right */
     width: 22rem;
-    max-width: min(22rem, 42vw);
-    pointer-events: auto;
   }
 }
 
