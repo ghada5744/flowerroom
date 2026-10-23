@@ -246,9 +246,9 @@ a {
   .subscribe-strip {
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    padding-right: 0;
+    justify-content: flex-start;
+    gap: 4.5rem;
+    padding-right: 6%;
   }
 }
 
