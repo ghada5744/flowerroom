@@ -231,18 +231,25 @@ a {
   padding-bottom: 1rem;
 }
 
-/* Subscribe under FAQ — tagline + email bar on one line (desktop) */
+/* Subscribe under FAQ — email/SIGN UP starts at header "Gift Sets" */
 .subscribe-strip {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
   align-items: stretch;
   width: 100%;
   margin-top: 1.75rem;
   padding: 1.5rem 0 2rem;
+  position: relative;
 }
 
-.subscribe-strip-title {
+.subscribe-strip-copy {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: none;
+}
+
+.subscribe-strip-copy h3 {
   margin: 0;
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.5rem;
@@ -250,17 +257,11 @@ a {
   color: #1a1a1a;
 }
 
-.subscribe-strip-row {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: stretch;
-}
-
-.subscribe-strip-tagline {
-  margin: 0;
+.subscribe-strip-copy p {
+  margin: 0.35rem 0 0;
   font-size: 13px;
   color: #666;
+  white-space: nowrap; /* keep tagline on one line */
 }
 
 .subscribe-strip-form {
@@ -269,23 +270,78 @@ a {
   width: min(100%, 22rem);
 }
 
+.subscribe-strip-form--desktop {
+  display: none;
+}
+
+.subscribe-strip-align {
+  display: none;
+}
+
 @media (min-width: 1024px) {
-  .subscribe-strip-row {
+  .subscribe-strip {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr;
     align-items: center;
-    width: 100%;
-    column-gap: 2rem;
   }
 
-  .subscribe-strip-tagline {
-    white-space: nowrap; /* keep “Sign up to get…” on one line */
-    justify-self: start;
+  .subscribe-strip-copy {
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 1;
+    /* Stay clear of the email bar that starts at Gift Sets */
+    max-width: calc(100% - 24rem);
   }
 
-  .subscribe-strip-form {
+  .subscribe-strip-form--mobile {
+    display: none;
+  }
+
+  .subscribe-strip-align {
+    display: block;
+    grid-column: 1;
+    grid-row: 1;
+    /* Break out to full main-rail width (= same content box as header cat nav) */
+    margin-left: calc(-210px - 2.5rem);
+    width: calc(100% + 210px + 2.5rem);
+    pointer-events: none;
+  }
+
+  .subscribe-nav-mirror {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem; /* gap-12 — same as header cat nav */
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.25;
+    white-space: nowrap;
+  }
+
+  .subscribe-nav-ghost {
+    visibility: hidden;
+    flex-shrink: 0;
+  }
+
+  .subscribe-nav-ghost--anchor {
+    position: relative;
+    visibility: visible;
+    pointer-events: none;
+  }
+
+  .subscribe-nav-ghost-label {
+    visibility: hidden;
+  }
+
+  .subscribe-strip-form--desktop {
+    display: flex;
+    position: absolute;
+    left: 0; /* start at Gift Sets */
+    top: 50%;
+    transform: translateY(-50%);
     width: 22rem;
-    justify-self: end; /* push email + SIGN UP to the right */
+    max-width: min(22rem, 42vw);
+    pointer-events: auto;
   }
 }
 

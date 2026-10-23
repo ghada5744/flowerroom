@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 
-/** Subscribe heading, then one row: tagline + email/SIGN UP. */
+/** Inline subscribe — email/SIGN UP starts at header "Gift Sets". */
 export function SubscribeStrip() {
   const [msg, setMsg] = useState("");
 
@@ -18,18 +18,51 @@ export function SubscribeStrip() {
     if (res.ok) (e.target as HTMLFormElement).reset();
   }
 
+  const fields = (
+    <>
+      <input name="email" type="email" required placeholder="Email*" aria-label="Email" />
+      <button type="submit">SIGN UP</button>
+    </>
+  );
+
   return (
     <div className="subscribe-strip">
-      <h3 className="subscribe-strip-title">Subscribe</h3>
+      <div className="subscribe-strip-copy">
+        <h3>Subscribe</h3>
+        <p>Sign up to get the latest on sales, new releases and more.</p>
+      </div>
 
-      <div className="subscribe-strip-row">
-        <p className="subscribe-strip-tagline">
-          Sign up to get the latest on sales, new releases and more.
-        </p>
-        <form onSubmit={onSubscribe} className="subscribe-strip-form">
-          <input name="email" type="email" required placeholder="Email*" aria-label="Email" />
-          <button type="submit">SIGN UP</button>
-        </form>
+      <form onSubmit={onSubscribe} className="subscribe-strip-form subscribe-strip-form--mobile">
+        {fields}
+      </form>
+
+      {/*
+        Desktop: same centered nav row as the header (font + gap).
+        Invisible labels keep spacing; form starts at "Gift Sets".
+      */}
+      <div className="subscribe-strip-align">
+        <div className="subscribe-nav-mirror">
+          <span className="subscribe-nav-ghost" aria-hidden="true">
+            Our Complete Range
+          </span>
+          <span className="subscribe-nav-ghost" aria-hidden="true">
+            Hand Tied Bouquets
+          </span>
+          <span className="subscribe-nav-ghost subscribe-nav-ghost--anchor">
+            <span className="subscribe-nav-ghost-label" aria-hidden="true">
+              Gift Sets
+            </span>
+            <form onSubmit={onSubscribe} className="subscribe-strip-form subscribe-strip-form--desktop">
+              {fields}
+            </form>
+          </span>
+          <span className="subscribe-nav-ghost" aria-hidden="true">
+            Roses
+          </span>
+          <span className="subscribe-nav-ghost" aria-hidden="true">
+            Signature Arrangements
+          </span>
+        </div>
       </div>
 
       {msg && <p className="subscribe-strip-msg">{msg}</p>}
