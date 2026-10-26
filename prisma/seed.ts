@@ -545,77 +545,51 @@ async function main() {
     },
   });
 
+  const googleReviewsUrl =
+    "https://www.google.com/maps/place/Flower+Room/@6.4282894,3.4374746,17z/data=!4m8!3m7!1s0x103bf5b554fb5f9f:0x485bb4c7ef888b04!8m2!3d6.4282894!4d3.4374746!9m1!1b1!16s%2Fg%2F11xrk_np_7";
+
+  // Real 5★ Google reviews for Flower Room (Victoria Island). Cards link to Google.
   await prisma.review.createMany({
     data: [
       {
-        authorName: "Adaobi O.",
-        title: "Stunning and on time",
-        body: "Ordered a pink bouquet for Lekki. Video approval was lovely and delivery was same day.",
+        authorName: "Google customer",
+        title: "Nice job perfect team",
+        body: "Nice job perfect team ❤️❤️❤️❤️",
         rating: 5,
+        sourceUrl: googleReviewsUrl,
         sortOrder: 1,
       },
       {
-        authorName: "Tunde A.",
-        title: "Beautiful arrangement",
-        body: "The Juliette ivory box looked fresh and elegant. Will order again.",
+        authorName: "Google customer",
+        title: "Beautiful flowers and excellent service",
+        body: "Beautiful flowers and excellent service! Highly recommended 💐",
         rating: 5,
+        sourceUrl: googleReviewsUrl,
         sortOrder: 2,
       },
       {
-        authorName: "Chioma E.",
-        title: "Gift set was perfect",
-        body: "Cake, balloons and flowers all arrived together. Recipient loved it.",
+        authorName: "Google customer",
+        title: "Amazing team",
+        body: "The team here is amazing. Very polite, responsive, and attentive to detail. They helped me choose the perfect flowers and even customized the arrangement to fit my budget. Five stars for service!",
         rating: 5,
+        sourceUrl: googleReviewsUrl,
         sortOrder: 3,
       },
       {
-        authorName: "Ngozi K.",
-        title: "Very quick and fresh",
-        body: "Same-day delivery to Victoria Island. Flowers looked exactly like the video.",
+        authorName: "Google customer",
+        title: "Top-notch customer service",
+        body: "Top-notch customer service!",
         rating: 5,
+        sourceUrl: googleReviewsUrl,
         sortOrder: 4,
       },
       {
-        authorName: "Ibrahim S.",
-        title: "Best rose basket",
-        body: "100 red roses basket for my wife — she was speechless. Great service.",
+        authorName: "Google customer",
+        title: "Flowers and thoughtful gifts",
+        body: "They have everything when it comes to flowers and thoughtful gifts! Also you can get ad-ons like cakes etc",
         rating: 5,
+        sourceUrl: googleReviewsUrl,
         sortOrder: 5,
-      },
-      {
-        authorName: "Funke B.",
-        title: "Elegant gift set",
-        body: "Bleu Royalty set arrived with cake and balloons. Packaging was premium.",
-        rating: 5,
-        sortOrder: 6,
-      },
-      {
-        authorName: "David M.",
-        title: "Reliable florist",
-        body: "Ordered twice this month. Both times on time with video approval first.",
-        rating: 5,
-        sortOrder: 7,
-      },
-      {
-        authorName: "Amaka U.",
-        title: "Wow factor",
-        body: "XXL Tropical Royal box filled the room. Exactly what I wanted for her birthday.",
-        rating: 5,
-        sortOrder: 8,
-      },
-      {
-        authorName: "Kelvin O.",
-        title: "Smooth WhatsApp order",
-        body: "Enquired on WhatsApp for an event quote and they handled everything calmly.",
-        rating: 5,
-        sortOrder: 9,
-      },
-      {
-        authorName: "Zainab H.",
-        title: "Fresh and fragrant",
-        body: "Ivory bouquet smelled amazing and lasted days. Highly recommend Flower Room NG.",
-        rating: 5,
-        sortOrder: 10,
       },
     ],
   });

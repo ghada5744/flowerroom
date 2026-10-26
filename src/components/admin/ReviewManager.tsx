@@ -9,6 +9,7 @@ type Review = {
   title: string;
   body: string;
   rating: number;
+  sourceUrl?: string | null;
   published: boolean;
   sortOrder: number;
 };
@@ -29,6 +30,7 @@ export function ReviewManager({ reviews }: { reviews: Review[] }) {
         title: form.get("title"),
         body: form.get("body"),
         rating: Number(form.get("rating") || 5),
+        sourceUrl: String(form.get("sourceUrl") || "").trim() || null,
         published: true,
         sortOrder: Number(form.get("sortOrder") || 0),
       }),
@@ -73,6 +75,16 @@ export function ReviewManager({ reviews }: { reviews: Review[] }) {
           <label className="label" htmlFor="body">Body</label>
           <textarea id="body" name="body" className="input min-h-24" required />
         </div>
+        <div>
+          <label className="label" htmlFor="sourceUrl">Google review link (optional)</label>
+          <input
+            id="sourceUrl"
+            name="sourceUrl"
+            type="url"
+            className="input"
+            placeholder="https://www.google.com/maps/..."
+          />
+        </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="label" htmlFor="rating">Rating</label>
@@ -97,6 +109,16 @@ export function ReviewManager({ reviews }: { reviews: Review[] }) {
                 <p className="font-medium">{r.title}</p>
                 <p className="text-sm text-muted">{r.authorName} · {r.rating}★</p>
                 <p className="mt-2 text-sm">{r.body}</p>
+                {r.sourceUrl && (
+                  <a
+                    href={r.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-block text-xs text-magenta hover:underline"
+                  >
+                    Open on Google
+                  </a>
+                )}
               </div>
               <div className="flex shrink-0 flex-col gap-2 text-xs">
                 <button

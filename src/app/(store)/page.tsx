@@ -20,7 +20,11 @@ export default async function HomePage() {
       orderBy: [{ featured: "desc" }, { name: "asc" }],
       take: 8,
     }),
-    prisma.review.findMany({ where: { published: true }, orderBy: { sortOrder: "asc" }, take: 12 }),
+    prisma.review.findMany({
+      where: { published: true, rating: 5 },
+      orderBy: { sortOrder: "asc" },
+      take: 12,
+    }),
     prisma.faq.findMany({ where: { published: true }, orderBy: { sortOrder: "asc" } }),
     prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),
     getSiteSettings(),
@@ -70,7 +74,7 @@ export default async function HomePage() {
         <div className="main-rail-grid">
           <aside className="main-rail-left">
             <div className="main-rail-left-sticky">
-              <ReviewsSummary />
+              <ReviewsSummary total={reviews.length} />
               <div className="main-rail-nav">
                 <ShopSidebar categories={categories} />
               </div>

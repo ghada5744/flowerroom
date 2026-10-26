@@ -13,7 +13,9 @@ export default async function AdminReviewsPage() {
   return (
     <div>
       <h1 className="font-display text-3xl">Reviews</h1>
-      <p className="mt-2 text-sm text-muted">Publish customer reviews shown on the homepage.</p>
+      <p className="mt-2 text-sm text-muted">
+        Publish 5★ Google reviews on the homepage. Add the Google Maps review link so cards open the real review.
+      </p>
       <div className="mt-6">
         <ReviewManager reviews={reviews} />
       </div>

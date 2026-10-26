@@ -146,6 +146,8 @@ model Review {
   title      String
   body       String
   rating     Int      @default(5)
+  /// Link to the real Google (or other) review — card opens this URL.
+  sourceUrl  String?
   published  Boolean  @default(true)
   sortOrder  Int      @default(0)
   createdAt  DateTime @default(now())

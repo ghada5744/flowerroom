@@ -8,6 +8,7 @@ const schema = z.object({
   title: z.string().min(1),
   body: z.string().min(1),
   rating: z.number().int().min(1).max(5).default(5),
+  sourceUrl: z.string().url().optional().nullable(),
   published: z.boolean().default(true),
   sortOrder: z.number().int().default(0),
 });

@@ -16,6 +16,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
       title: z.string().optional(),
       body: z.string().optional(),
       rating: z.number().int().min(1).max(5).optional(),
+      sourceUrl: z.string().url().optional().nullable(),
       sortOrder: z.number().int().optional(),
     })
     .parse(await req.json());
