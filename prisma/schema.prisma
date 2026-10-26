@@ -167,7 +167,7 @@ model SiteSetting {
   brandName      String @default("FLOWER ROOM")
   tagline        String @default("THE ART OF GIFTING")
   phone          String @default("+234 915 535 3128")
-  email          String @default("theroomng@gmail.com")
+  email          String @default("info@flowerroom.ng")
   whatsapp       String @default("2349155353128")
   facebookUrl    String @default("https://www.facebook.com/p/Flower-Room-Nigeria-61581423721745/")
   instagramUrl   String @default("https://www.instagram.com/flower_room_ng")

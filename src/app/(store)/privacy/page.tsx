@@ -7,7 +7,7 @@ export default function PrivacyPage() {
           Flower Room NG collects the personal information you provide when creating an account or placing an
           order — including your name, email, phone number, and delivery details — solely to fulfil orders,
           process payments via Paystack, and communicate about your purchase. We do not sell your data. You may
-          contact us at theroomng@gmail.com to update or delete your account information.
+          contact us at info@flowerroom.ng to update or delete your account information.
         </p>
       </div>
     </div>

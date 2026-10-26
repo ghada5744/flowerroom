@@ -5,7 +5,7 @@ const FALLBACK = {
   brandName: "FLOWER ROOM",
   tagline: "THE ART OF GIFTING",
   phone: process.env.NEXT_PUBLIC_PHONE || "+234 915 535 3128",
-  email: "theroomng@gmail.com",
+  email: "info@flowerroom.ng",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "2349155353128",
   facebookUrl: "https://www.facebook.com/p/Flower-Room-Nigeria-61581423721745/",
   instagramUrl: "https://www.instagram.com/flower_room_ng",

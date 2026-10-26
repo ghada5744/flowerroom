@@ -267,7 +267,7 @@ a {
 .subscribe-strip-form {
   display: flex;
   gap: 0.5rem;
-  width: min(100%, 22rem);
+  width: min(100%, 28rem);
 }
 
 .subscribe-strip-form--desktop {
@@ -290,7 +290,7 @@ a {
     grid-row: 1;
     z-index: 1;
     /* Stay clear of the email bar that starts at Gift Sets */
-    max-width: calc(100% - 24rem);
+    max-width: calc(100% - 30rem);
   }
 
   .subscribe-strip-form--mobile {
@@ -339,8 +339,8 @@ a {
     left: 0; /* start at Gift Sets */
     top: 50%;
     transform: translateY(-50%);
-    width: 22rem;
-    max-width: min(22rem, 42vw);
+    width: 28rem;
+    max-width: min(28rem, 48vw);
     pointer-events: auto;
   }
 }

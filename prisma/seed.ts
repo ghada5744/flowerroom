@@ -530,7 +530,7 @@ async function main() {
       brandName: "FLOWER ROOM",
       tagline: "THE ART OF GIFTING",
       phone: "+234 915 535 3128",
-      email: "theroomng@gmail.com",
+      email: "info@flowerroom.ng",
       whatsapp: "2349155353128",
       facebookUrl: "https://www.facebook.com/p/Flower-Room-Nigeria-61581423721745/",
       instagramUrl: "https://www.instagram.com/flower_room_ng",
