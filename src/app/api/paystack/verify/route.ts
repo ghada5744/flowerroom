@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendPaidOrderEmails } from "@/lib/order-email";
-import { isPaystackConfigured, verifyPaystack } from "@/lib/paystack";
+import { allowDemoPayments, isPaystackConfigured, verifyPaystack } from "@/lib/paystack";
 
 async function notifyPaid(orderId: string) {
   const order = await prisma.order.findUnique({
@@ -35,6 +35,10 @@ export async function GET(req: NextRequest) {
     }
 
     if (!isPaystackConfigured()) {
+      if (!allowDemoPayments()) {
+        return NextResponse.redirect(`${siteUrl}/order/failed?reason=payments_not_configured`);
+      }
+      // Local testing only: mark paid without calling Paystack
       const alreadyPaid = payment.status === "demo_paid" || payment.status === "paid";
       await prisma.$transaction([
         prisma.payment.update({

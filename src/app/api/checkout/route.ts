@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { generateOrderNumber } from "@/lib/format";
-import { initializePaystack, isPaystackConfigured } from "@/lib/paystack";
+import { allowDemoPayments, initializePaystack, isPaystackConfigured } from "@/lib/paystack";
 import { getCustomerSession } from "@/lib/customer-auth";
 
 const schema = z.object({
@@ -92,10 +92,16 @@ export async function POST(req: Request) {
     });
 
     if (!isPaystackConfigured()) {
-      // Dev fallback: mark as awaiting manual payment and send to success with mock
+      if (!allowDemoPayments()) {
+        return NextResponse.json(
+          { error: "Payments are not configured. Set PAYSTACK_SECRET_KEY (live or test)." },
+          { status: 503 },
+        );
+      }
+      // Local testing only: skip Paystack and send to success with mock
       await prisma.order.update({
         where: { id: order.id },
-        data: { status: "AWAITING_PAYMENT", notes: "Paystack not configured — complete payment manually." },
+        data: { status: "AWAITING_PAYMENT", notes: "Paystack not configured — demo checkout." },
       });
       return NextResponse.json({
         authorizationUrl: `${siteUrl}/order/success?reference=${reference}&demo=1`,

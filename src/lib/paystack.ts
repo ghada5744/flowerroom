@@ -58,5 +58,16 @@ export async function verifyPaystack(reference: string) {
 
 export function isPaystackConfigured() {
   const key = secretKey();
-  return Boolean(key && !key.includes("replace_me"));
+  return Boolean(key && !key.includes("replace_me") && !key.includes("sk_test_xxx"));
+}
+
+/**
+ * Fake “auto-paid” checkout (no Paystack). Only for local testing.
+ * Requires ALLOW_DEMO_PAYMENTS=true and must never run in production.
+ */
+export function allowDemoPayments() {
+  if (process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production") {
+    return false;
+  }
+  return process.env.ALLOW_DEMO_PAYMENTS === "true";
 }
