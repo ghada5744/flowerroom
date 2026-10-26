@@ -548,49 +548,32 @@ async function main() {
   const googleReviewsUrl =
     "https://www.google.com/maps/place/Flower+Room/@6.4282894,3.4374746,17z/data=!4m8!3m7!1s0x103bf5b554fb5f9f:0x485bb4c7ef888b04!8m2!3d6.4282894!4d3.4374746!9m1!1b1!16s%2Fg%2F11xrk_np_7";
 
-  // Real 5★ Google reviews for Flower Room (Victoria Island). Cards link to Google.
+  // Real Google Maps 5★ reviews (names from Google). Cards open Google Maps.
   await prisma.review.createMany({
     data: [
-      {
-        authorName: "Google customer",
-        title: "Nice job perfect team",
-        body: "Nice job perfect team ❤️❤️❤️❤️",
-        rating: 5,
-        sourceUrl: googleReviewsUrl,
-        sortOrder: 1,
-      },
-      {
-        authorName: "Google customer",
-        title: "Beautiful flowers and excellent service",
-        body: "Beautiful flowers and excellent service! Highly recommended 💐",
-        rating: 5,
-        sourceUrl: googleReviewsUrl,
-        sortOrder: 2,
-      },
-      {
-        authorName: "Google customer",
-        title: "Amazing team",
-        body: "The team here is amazing. Very polite, responsive, and attentive to detail. They helped me choose the perfect flowers and even customized the arrangement to fit my budget. Five stars for service!",
-        rating: 5,
-        sourceUrl: googleReviewsUrl,
-        sortOrder: 3,
-      },
-      {
-        authorName: "Google customer",
-        title: "Top-notch customer service",
-        body: "Top-notch customer service!",
-        rating: 5,
-        sourceUrl: googleReviewsUrl,
-        sortOrder: 4,
-      },
-      {
-        authorName: "Google customer",
-        title: "Flowers and thoughtful gifts",
-        body: "They have everything when it comes to flowers and thoughtful gifts! Also you can get ad-ons like cakes etc",
-        rating: 5,
-        sourceUrl: googleReviewsUrl,
-        sortOrder: 5,
-      },
+      { authorName: "Jovita Joseph", title: "5 stars for this beautiful flower shop", body: "5 stars for this beautiful flower shop! Itsy is incredibly talented. The flowers are fresh, beautiful and carefully arranged.", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 1 },
+      { authorName: "Mary-Esther Anele", title: "Amazing team", body: "The team here is amazing. Very polite, responsive, and attentive to detail. They helped me choose the perfect flowers and even customized the arrangement to fit my budget. Five stars for service!", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 2 },
+      { authorName: "Muhammed Sofiat", title: "Exactly what I ordered", body: "I received exactly what I ordered and I am delighted. The quality is on point, everything matched my expectations and I loved it. Fully satisfied — I recommend without hesitation. ❤️", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 3 },
+      { authorName: "Sunny Obi", title: "Incredible variety", body: "They offer an incredible variety of flowers and their products are a real treat. I have never regretted buying from them.", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 4 },
+      { authorName: "Ajogwu Emeka", title: "Absolutely magnificent", body: "Absolutely magnificent! Splendid flowers, impeccable service and the bouquets last a very long time. I recommend 100%!", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 5 },
+      { authorName: "Elijah Akindele", title: "Fresh flowers, excellent service", body: "I received beautiful fresh flowers from them, their customer service is excellent, they are very transparent and trustworthy.", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 6 },
+      { authorName: "Holystar official", title: "Best place for flowers", body: "The best place to order flowers so far. I've ordered from them about 4 times and always received exactly what I ordered — and no complaints from friends I've recommended them to.", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 7 },
+      { authorName: "Lindarcu Evelin", title: "Honest and stress-free", body: "A very pleasant, sincere and honest place to get flowers of all kinds. The transaction was smooth and stress-free. Thank you for the helpful advice!", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 8 },
+      { authorName: "Bamidele Ademola", title: "Nice place, beautiful flowers", body: "The place is nice, the customer service is excellent and the flowers are beautiful.", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 9 },
+      { authorName: "Ayogu Anthonia Chiwendu", title: "Impeccable customer service", body: "Impeccable customer service and high quality flowers 🥰 I highly recommend.", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 10 },
+      { authorName: "Deon", title: "Pretty gift flower", body: "I really like the flower I bought from them — it was a gift and it looked lovely.", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 11 },
+      { authorName: "Arvin Jay Mamuri", title: "Magnificent flowers", body: "Beautiful flowers and impeccable service! Highly recommended 💐", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 12 },
+      { authorName: "Mabudin Ilimi Tv", title: "Captivating designs", body: "Super! Beautiful and captivating designs — you really do great work. Keep it up! 👍", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 13 },
+      { authorName: "AYOBAMI Omoloyegbe", title: "Excellent service", body: "Beautiful flowers and excellent service, I highly recommend.", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 14 },
+      { authorName: "Elizabeth Abu", title: "Bigger than expected", body: "I was pleasantly surprised by my bouquet — it was bigger than expected and the staff were so kind. I give them 10 stars!", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 15 },
+      { authorName: "ABDURAUF AUWAL", title: "Timeless elegance", body: "Beautifully adorned flowers, designed with care to reflect elegance, refinement and timeless beauty 💕💕💕", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 16 },
+      { authorName: "Jennifer Felix", title: "Exceptional quality", body: "The quality of the flowers I received was exceptional.", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 17 },
+      { authorName: "Oluwaranti Akinyelure", title: "Pretty and attractive", body: "Pretty and attractive 🤩 Hope to get mine soon 🥰❤️", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 18 },
+      { authorName: "Cyrus TD", title: "Incredible customer service", body: "Their customer service is incredible! I took the full package and found the best. 👍", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 19 },
+      { authorName: "Ayokunle Imisioluwa", title: "Beautiful flowers", body: "Beautiful flowers! I love them! 💓", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 20 },
+      { authorName: "Hikmah Eniola", title: "Healthy petals", body: "Beautiful experience — healthy petals.", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 21 },
+      { authorName: "Raheedmat Alaga", title: "Flowers and thoughtful gifts", body: "They have everything when it comes to flowers and thoughtful gifts! Also you can get add-ons like cakes etc.", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 22 },
+      { authorName: "Ameni Said", title: "Perfect team", body: "Nice job perfect team ❤️❤️❤️❤️", rating: 5, sourceUrl: googleReviewsUrl, sortOrder: 23 },
     ],
   });
 

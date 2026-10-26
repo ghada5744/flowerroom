@@ -23,7 +23,7 @@ export default async function HomePage() {
     prisma.review.findMany({
       where: { published: true, rating: 5 },
       orderBy: { sortOrder: "asc" },
-      take: 12,
+      take: 40,
     }),
     prisma.faq.findMany({ where: { published: true }, orderBy: { sortOrder: "asc" } }),
     prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { GOOGLE_REVIEWS_URL } from "@/lib/google-reviews";
+import { GOOGLE_REVIEWS_URL, GOOGLE_WRITE_REVIEW_URL } from "@/lib/google-reviews";
 
 type Review = {
   id: string;
@@ -13,16 +13,29 @@ type Review = {
 };
 
 const TIMES = [
-  "3 hours ago",
-  "5 hours ago",
-  "8 hours ago",
-  "19 hours ago",
-  "1 day ago",
-  "2 days ago",
-  "3 days ago",
-  "5 days ago",
-  "1 week ago",
-  "2 weeks ago",
+  "1 month ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "11 months ago",
+  "11 months ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "2 months ago",
+  "11 months ago",
+  "11 months ago",
 ];
 
 function TpStars({ size = 18 }: { size?: number }) {
@@ -45,20 +58,29 @@ function TpStars({ size = 18 }: { size?: number }) {
 /** Left column block — sits above the sticky sidebar (flowers.ae) */
 export function ReviewsSummary({ total = 5 }: { total?: number }) {
   return (
-    <a
-      href={GOOGLE_REVIEWS_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="reviews-summary reviews-summary-link"
-    >
+    <div className="reviews-summary">
       <p className="reviews-excellent">Excellent</p>
       <div className="mt-1.5">
         <TpStars size={20} />
       </div>
       <p className="mt-2 text-[12px] text-[#555]">
-        Based on <span className="underline decoration-[#bbb]">{total.toLocaleString()}</span> reviews
+        Based on{" "}
+        <a
+          href={GOOGLE_REVIEWS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline decoration-[#bbb] hover:text-magenta"
+        >
+          {total.toLocaleString()}
+        </a>{" "}
+        reviews
       </p>
-      <p className="mt-2 flex items-center gap-1.5 text-[13px] font-semibold text-[#4285f4]">
+      <a
+        href={GOOGLE_WRITE_REVIEW_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="reviews-add-link mt-2.5 inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#4285f4] hover:underline"
+      >
         <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden>
           <path
             fill="#4285F4"
@@ -77,9 +99,9 @@ export function ReviewsSummary({ total = 5 }: { total?: number }) {
             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
           />
         </svg>
-        Google
-      </p>
-    </a>
+        Add your review
+      </a>
+    </div>
   );
 }
 

@@ -1146,16 +1146,8 @@ a {
   width: 100%;
 }
 
-.reviews-summary-link {
-  display: block;
-  color: inherit;
+.reviews-add-link {
   text-decoration: none;
-  border-radius: 6px;
-  transition: opacity 0.15s ease;
-}
-
-.reviews-summary-link:hover {
-  opacity: 0.85;
 }
 
 .reviews-excellent {
