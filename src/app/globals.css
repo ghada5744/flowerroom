@@ -573,6 +573,12 @@ a {
   color: var(--magenta);
 }
 
+.header-action svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
 .header-action-label {
   display: none;
 }
@@ -713,8 +719,8 @@ a {
 }
 
 .header-socials svg {
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
   display: block;
 }
 
