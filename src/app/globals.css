@@ -1371,7 +1371,7 @@ a {
 .header-search {
   align-items: center;
   border: 1.5px solid #2e2e2e;
-  background: #fff;
+  background: var(--cream);
   min-width: 220px;
   height: 38px;
   padding: 0 12px;
