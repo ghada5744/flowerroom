@@ -51,10 +51,8 @@ export function CustomerOrdersAccordion({
             </div>
             {open && (
               <>
-                <p className="mt-2 text-sm text-muted">
-                  {email}
-                  {phone ? ` · ${phone}` : ""}
-                </p>
+                <p className="mt-2 text-sm text-muted">{email}</p>
+                {phone && <p className="mt-0.5 text-sm text-muted">{phone}</p>}
                 <p className="mt-1 text-xs uppercase tracking-wide text-muted">Joined {joinedLabel}</p>
               </>
             )}
@@ -85,7 +83,7 @@ export function CustomerOrdersAccordion({
               ))}
             </ul>
           ) : (
-            <p className="pt-4 text-sm text-muted">No open paid orders.</p>
+            <p className="pt-4 text-sm text-muted">No open paid orders</p>
           )}
         </div>
       )}

@@ -40,7 +40,7 @@ export default async function AdminOrdersPage() {
               <th className="px-4 py-3">Customer</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Total</th>
-              <th className="px-4 py-3 text-right">Action</th>
+              <th className="whitespace-nowrap px-4 py-3">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -57,7 +57,7 @@ export default async function AdminOrdersPage() {
                   <OrderStatusBadge status={o.status} />
                 </td>
                 <td className="px-4 py-3">{formatNaira(o.totalKobo)}</td>
-                <td className="px-4 py-3 text-right">
+                <td className="whitespace-nowrap px-4 py-3">
                   <MarkDeliveredButton orderId={o.id} />
                 </td>
               </tr>
