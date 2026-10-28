@@ -312,10 +312,126 @@ a {
   padding: 1.25rem;
 }
 
-.admin-stat-priority {
-  border-color: rgba(194, 24, 91, 0.28);
-  background: linear-gradient(180deg, #fff 0%, rgba(194, 24, 91, 0.04) 100%);
-  box-shadow: inset 3px 0 0 var(--magenta);
+.customer-accordion-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.customer-accordion-row .customer-accordion-head {
+  flex: 1;
+  min-width: 0;
+}
+
+.customer-accordion-actions {
+  display: flex;
+  align-items: center;
+  padding: 0 1rem 0 0;
+}
+
+.customer-delete-btn {
+  border: none;
+  background: transparent;
+  padding: 0.35rem 0.4rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.customer-delete-btn:hover {
+  color: var(--magenta);
+}
+
+.admin-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(26, 26, 26, 0.38);
+  backdrop-filter: blur(2px);
+}
+
+.admin-confirm-dialog {
+  width: 100%;
+  max-width: 420px;
+  padding: 1.75rem 1.6rem 1.5rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: 0 18px 50px rgba(26, 26, 26, 0.14);
+  animation: admin-confirm-in 0.18s ease-out;
+}
+
+@keyframes admin-confirm-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.admin-confirm-kicker {
+  margin: 0;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--magenta);
+}
+
+.admin-confirm-title {
+  margin: 0.55rem 0 0;
+  font-family: var(--font-display, Georgia, "Times New Roman", serif);
+  font-size: 1.65rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.admin-confirm-message {
+  margin: 0.85rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.admin-confirm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+}
+
+.admin-confirm-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.2rem;
+  border: 1px solid var(--magenta);
+  background: var(--magenta);
+  color: #fff;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.admin-confirm-danger:hover:not(:disabled) {
+  background: var(--magenta-hover);
+}
+
+.admin-confirm-danger:disabled,
+.admin-confirm-actions .btn-ghost:disabled {
+  opacity: 0.55;
+  cursor: wait;
 }
 
 /* Admin products — soft filter strip matching cream table header */

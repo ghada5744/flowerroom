@@ -7,7 +7,7 @@ import { apiErrorFromUnknown } from "@/lib/form-errors";
 const schema = z.object({
   name: z.string().trim().min(2, "Please enter your name."),
   email: z.string().trim().email("Please enter a valid email address."),
-  phone: z.string().trim().min(7, "Please enter a valid phone number.").optional().nullable(),
+  phone: z.string().trim().min(7, "Please enter a valid phone number."),
   password: z.string().min(6, "Password must be at least 6 characters."),
   marketingOptIn: z.boolean().optional().default(true),
 });
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       data: {
         email,
         name: body.name.trim(),
-        phone: body.phone?.trim() || null,
+        phone: body.phone.trim(),
         passwordHash: await hashPassword(body.password),
         marketingOptIn: body.marketingOptIn ?? true,
       },

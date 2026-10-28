@@ -154,8 +154,12 @@ export default function CheckoutPage() {
                 <input
                   id="senderPhone"
                   name="senderPhone"
+                  type="tel"
                   className={fieldClass(fieldErrors, "senderPhone")}
                   required
+                  minLength={7}
+                  autoComplete="tel"
+                  placeholder="Your phone number"
                   defaultValue={user?.phone || ""}
                   onChange={() => clearField("senderPhone")}
                 />
@@ -183,8 +187,12 @@ export default function CheckoutPage() {
                 <input
                   id="recipientPhone"
                   name="recipientPhone"
+                  type="tel"
                   className={fieldClass(fieldErrors, "recipientPhone")}
                   required
+                  minLength={7}
+                  autoComplete="tel"
+                  placeholder="Recipient phone number"
                   onChange={() => clearField("recipientPhone")}
                 />
                 {fieldErrors.recipientPhone && <p className="field-error">{fieldErrors.recipientPhone}</p>}

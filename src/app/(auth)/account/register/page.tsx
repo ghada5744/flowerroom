@@ -33,7 +33,7 @@ export default function AccountRegisterPage() {
         body: JSON.stringify({
           name: form.get("name"),
           email: form.get("email"),
-          phone: form.get("phone") || null,
+          phone: form.get("phone"),
           password: form.get("password"),
           marketingOptIn: marketing,
         }),
@@ -87,8 +87,10 @@ export default function AccountRegisterPage() {
             id="phone"
             name="phone"
             type="tel"
+            required
+            minLength={7}
             autoComplete="tel"
-            placeholder="Phone"
+            placeholder="Phone number"
             className={`auth-input${fieldErrors.phone ? " input-error" : ""}`}
             onChange={() => clearField("phone")}
           />

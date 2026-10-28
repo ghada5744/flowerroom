@@ -39,6 +39,7 @@ export default async function AdminCustomersPage() {
         {customers.map((c) => (
           <CustomerOrdersAccordion
             key={c.id}
+            id={c.id}
             name={c.name}
             email={c.email}
             phone={c.phone}

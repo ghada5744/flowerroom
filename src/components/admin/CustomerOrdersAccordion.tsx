@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { CustomerDeleteButton } from "@/components/admin/CustomerDeleteButton";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
 import { formatNaira } from "@/lib/format";
 
@@ -13,6 +14,7 @@ type OrderRow = {
 };
 
 export function CustomerOrdersAccordion({
+  id,
   name,
   email,
   phone,
@@ -21,6 +23,7 @@ export function CustomerOrdersAccordion({
   vip,
   orders,
 }: {
+  id: string;
   name: string;
   email: string;
   phone: string | null;
@@ -33,40 +36,39 @@ export function CustomerOrdersAccordion({
 
   return (
     <article className={`customer-accordion${open ? " is-open" : ""}`}>
-      <button
-        type="button"
-        className="customer-accordion-head"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-      >
-        <div className="min-w-0 text-left">
-          <div className="flex flex-wrap items-center gap-2">
-            <h2 className="font-display text-xl leading-tight">{name}</h2>
-            {paidCount > 0 && (
-              <span className="customer-open-count">
-                {paidCount} open
-              </span>
+      <div className="customer-accordion-row">
+        <button
+          type="button"
+          className="customer-accordion-head"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+        >
+          <div className="min-w-0 text-left">
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="font-display text-xl leading-tight">{name}</h2>
+              {paidCount > 0 && <span className="customer-open-count">{paidCount} open</span>}
+              {vip && <span className="customer-vip-pill">VIP</span>}
+            </div>
+            {open && (
+              <>
+                <p className="mt-2 text-sm text-muted">
+                  {email}
+                  {phone ? ` · ${phone}` : ""}
+                </p>
+                <p className="mt-1 text-xs uppercase tracking-wide text-muted">Joined {joinedLabel}</p>
+              </>
             )}
-            {vip && <span className="customer-vip-pill">VIP</span>}
           </div>
-          {open && (
-            <>
-              <p className="mt-2 text-sm text-muted">
-                {email}
-                {phone ? ` · ${phone}` : ""}
-              </p>
-              <p className="mt-1 text-xs uppercase tracking-wide text-muted">
-                Joined {joinedLabel}
-              </p>
-            </>
-          )}
+          <span className={`customer-accordion-chevron${open ? " is-open" : ""}`} aria-hidden>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </span>
+        </button>
+        <div className="customer-accordion-actions">
+          <CustomerDeleteButton id={id} name={name} />
         </div>
-        <span className={`customer-accordion-chevron${open ? " is-open" : ""}`} aria-hidden>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M6 9l6 6 6-6" />
-          </svg>
-        </span>
-      </button>
+      </div>
 
       {open && (
         <div className="border-t border-line px-5 pb-4">

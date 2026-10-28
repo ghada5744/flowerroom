@@ -99,6 +99,14 @@ export async function POST(req: Request) {
       },
     });
 
+    // Keep account phone in sync when a logged-in customer checks out
+    if (session?.userId) {
+      await prisma.user.update({
+        where: { id: session.userId },
+        data: { phone: body.senderPhone.trim() },
+      });
+    }
+
     if (!isPaystackConfigured()) {
       if (!allowDemoPayments()) {
         return NextResponse.json(
