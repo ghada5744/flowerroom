@@ -4,8 +4,6 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const STATUSES = [
-  "PENDING",
-  "AWAITING_PAYMENT",
   "PAID",
   "ARRANGING",
   "VIDEO_APPROVED",
@@ -57,7 +55,7 @@ export function OrderStatusForm({
           Status
         </label>
         <select id="status" name="status" className="input" defaultValue={status}>
-          {STATUSES.map((s) => (
+          {(STATUSES.includes(status) ? STATUSES : [status, ...STATUSES]).map((s) => (
             <option key={s} value={s}>
               {s}
             </option>

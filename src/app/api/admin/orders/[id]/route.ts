@@ -21,7 +21,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
       where: { id },
       data: {
         status: body.status,
-        notes: body.notes || null,
+        ...(body.notes !== undefined ? { notes: body.notes || null } : {}),
       },
     });
     return NextResponse.json(order);

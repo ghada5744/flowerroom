@@ -37,7 +37,10 @@ export function orderStatusLabel(status: string) {
     case "PAID":
       return "Paid";
     case "PROCESSING":
+    case "ARRANGING":
       return "Preparing";
+    case "VIDEO_APPROVED":
+      return "Video approved";
     case "OUT_FOR_DELIVERY":
       return "Out for delivery";
     case "DELIVERED":
@@ -49,5 +52,25 @@ export function orderStatusLabel(status: string) {
       return "Cancelled";
     default:
       return status.replaceAll("_", " ").toLowerCase();
+  }
+}
+
+/** Soft badge tone for admin tables. */
+export function orderStatusTone(status: string): "paid" | "progress" | "delivery" | "done" | "cancel" | "wait" {
+  switch (status) {
+    case "PAID":
+      return "paid";
+    case "ARRANGING":
+    case "PROCESSING":
+    case "VIDEO_APPROVED":
+      return "progress";
+    case "OUT_FOR_DELIVERY":
+      return "delivery";
+    case "DELIVERED":
+      return "done";
+    case "CANCELLED":
+      return "cancel";
+    default:
+      return "wait";
   }
 }

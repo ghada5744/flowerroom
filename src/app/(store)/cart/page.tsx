@@ -62,7 +62,7 @@ export default function CartPage() {
                 +
               </button>
             </div>
-            <div className="flex items-center gap-3 sm:w-36 sm:justify-end">
+            <div className="flex items-center gap-6 sm:w-40 sm:justify-end">
               <p className="font-medium">{formatNaira(item.unitKobo * item.quantity)}</p>
               <button
                 type="button"

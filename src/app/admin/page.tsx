@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
+import { deliveredWhere, paidRevenueWhere, paidUndeliveredWhere } from "@/lib/admin-orders";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { formatNaira } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
@@ -9,17 +11,20 @@ export const dynamic = "force-dynamic";
 export default async function AdminDashboard() {
   if (!(await isAdminAuthenticated())) redirect("/admin/login");
 
-  const [orderCount, paidOrders, productCount, customerCount, recent] = await Promise.all([
-    prisma.order.count(),
-    prisma.order.findMany({ where: { status: "PAID" }, select: { totalKobo: true } }),
-    prisma.product.count(),
-    prisma.user.count(),
-    prisma.order.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 8,
-      include: { payment: true },
-    }),
-  ]);
+  const [undeliveredCount, deliveredCount, paidOrders, productCount, customerCount, recent] =
+    await Promise.all([
+      prisma.order.count({ where: paidUndeliveredWhere }),
+      prisma.order.count({ where: deliveredWhere }),
+      prisma.order.findMany({ where: paidRevenueWhere, select: { totalKobo: true } }),
+      prisma.product.count(),
+      prisma.user.count(),
+      prisma.order.findMany({
+        where: paidUndeliveredWhere,
+        orderBy: { createdAt: "desc" },
+        take: 8,
+        include: { payment: true },
+      }),
+    ]);
 
   const revenue = paidOrders.reduce((n, o) => n + o.totalKobo, 0);
 
@@ -43,20 +48,30 @@ export default async function AdminDashboard() {
         </Link>
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="border border-line bg-white p-5">
-          <p className="text-xs uppercase tracking-wider text-muted">Orders</p>
-          <p className="font-display mt-2 text-3xl">{orderCount}</p>
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="admin-stat-card admin-stat-priority">
+          <p className="text-xs uppercase tracking-wider text-muted">Undelivered orders</p>
+          <p className="font-display mt-2 text-3xl text-magenta">{undeliveredCount}</p>
+          <Link href="/admin/orders" className="mt-2 inline-block text-xs text-magenta hover:underline">
+            Open orders →
+          </Link>
         </div>
-        <div className="border border-line bg-white p-5">
+        <div className="admin-stat-card">
+          <p className="text-xs uppercase tracking-wider text-muted">Delivered orders</p>
+          <p className="font-display mt-2 text-3xl">{deliveredCount}</p>
+          <Link href="/admin/orders/delivered" className="mt-2 inline-block text-xs text-magenta hover:underline">
+            View delivered →
+          </Link>
+        </div>
+        <div className="admin-stat-card">
           <p className="text-xs uppercase tracking-wider text-muted">Paid revenue</p>
           <p className="font-display mt-2 text-3xl text-magenta">{formatNaira(revenue)}</p>
         </div>
-        <div className="border border-line bg-white p-5">
+        <div className="admin-stat-card">
           <p className="text-xs uppercase tracking-wider text-muted">Products</p>
           <p className="font-display mt-2 text-3xl">{productCount}</p>
         </div>
-        <div className="border border-line bg-white p-5">
+        <div className="admin-stat-card">
           <p className="text-xs uppercase tracking-wider text-muted">Customers</p>
           <p className="font-display mt-2 text-3xl">{customerCount}</p>
         </div>
@@ -64,7 +79,7 @@ export default async function AdminDashboard() {
 
       <div className="mt-10">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-2xl">Recent orders</h2>
+          <h2 className="font-display text-2xl">Recent undelivered orders</h2>
           <Link href="/admin/orders" className="text-sm text-magenta hover:underline">
             View all
           </Link>
@@ -88,14 +103,16 @@ export default async function AdminDashboard() {
                     </Link>
                   </td>
                   <td className="px-4 py-3">{o.senderName}</td>
-                  <td className="px-4 py-3">{o.status}</td>
+                  <td className="px-4 py-3">
+                    <OrderStatusBadge status={o.status} />
+                  </td>
                   <td className="px-4 py-3">{formatNaira(o.totalKobo)}</td>
                 </tr>
               ))}
               {recent.length === 0 && (
                 <tr>
                   <td colSpan={4} className="px-4 py-8 text-center text-muted">
-                    No orders yet.
+                    No open paid orders.
                   </td>
                 </tr>
               )}

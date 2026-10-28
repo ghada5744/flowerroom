@@ -1,5 +1,8 @@
 import { notFound, redirect } from "next/navigation";
+import { MarkDeliveredButton } from "@/components/admin/MarkDeliveredButton";
+import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
 import { OrderStatusForm } from "@/components/admin/OrderStatusForm";
+import { OPEN_FULFILLMENT_STATUSES } from "@/lib/admin-orders";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { formatNaira } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
@@ -21,7 +24,10 @@ export default async function AdminOrderDetailPage({ params }: Props) {
   return (
     <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
       <div>
-        <h1 className="font-display text-3xl">{order.orderNumber}</h1>
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="font-display text-3xl">{order.orderNumber}</h1>
+          <OrderStatusBadge status={order.status} />
+        </div>
         <p className="mt-1 text-sm text-muted">{order.createdAt.toLocaleString()}</p>
 
         <div className="mt-6 border border-line bg-white p-5">
@@ -69,6 +75,11 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           Payment: {order.payment?.status || "—"}
           {order.payment?.reference ? ` (${order.payment.reference})` : ""}
         </p>
+        {(OPEN_FULFILLMENT_STATUSES as readonly string[]).includes(order.status) && (
+          <div className="mt-4">
+            <MarkDeliveredButton orderId={order.id} />
+          </div>
+        )}
         <div className="mt-4">
           <OrderStatusForm orderId={order.id} status={order.status} notes={order.notes || ""} />
         </div>
