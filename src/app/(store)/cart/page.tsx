@@ -48,6 +48,7 @@ export default function CartPage() {
                 type="button"
                 className="btn-ghost px-3 py-1"
                 onClick={() => setQuantity(item.variantId, item.quantity - 1)}
+                aria-label="Decrease quantity"
               >
                 −
               </button>
@@ -56,18 +57,26 @@ export default function CartPage() {
                 type="button"
                 className="btn-ghost px-3 py-1"
                 onClick={() => setQuantity(item.variantId, item.quantity + 1)}
+                aria-label="Increase quantity"
               >
                 +
               </button>
             </div>
-            <div className="text-right sm:w-28">
+            <div className="flex items-center gap-3 sm:w-36 sm:justify-end">
               <p className="font-medium">{formatNaira(item.unitKobo * item.quantity)}</p>
               <button
                 type="button"
-                className="mt-1 text-xs text-muted hover:text-magenta"
+                className="cart-trash-btn"
                 onClick={() => removeItem(item.variantId)}
+                aria-label={`Remove ${item.productName} from cart`}
+                title="Remove from cart"
               >
-                Remove
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+                  <path d="M4 7h16" />
+                  <path d="M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2" />
+                  <path d="M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12" />
+                  <path d="M10 11v6M14 11v6" />
+                </svg>
               </button>
             </div>
           </li>

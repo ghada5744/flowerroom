@@ -130,6 +130,25 @@ a {
   letter-spacing: 0.08em;
 }
 
+.cart-trash-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.cart-trash-btn:hover {
+  color: var(--magenta);
+  border-color: var(--magenta);
+  background: #fff5f8;
+}
+
 .btn-ghost {
   display: inline-flex;
   align-items: center;
