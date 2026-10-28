@@ -71,7 +71,7 @@ export default function CartPage() {
                 aria-label={`Remove ${item.productName} from cart`}
                 title="Remove from cart"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden>
                   <path d="M4 7h16" />
                   <path d="M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2" />
                   <path d="M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12" />

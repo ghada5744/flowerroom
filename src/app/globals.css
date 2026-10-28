@@ -134,19 +134,24 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border: 1px solid #ddd;
-  background: #fff;
-  color: #666;
+  padding: 0.25rem;
+  border: none;
+  background: transparent;
+  color: var(--magenta);
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  opacity: 0.85;
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
 .cart-trash-btn:hover {
-  color: var(--magenta);
-  border-color: var(--magenta);
-  background: #fff5f8;
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+.cart-trash-btn svg {
+  width: 22px;
+  height: 22px;
+  display: block;
 }
 
 .btn-ghost {
