@@ -8,7 +8,6 @@ const LINKS = [
   ["/admin/addons", "Add-ons"],
   ["/admin/orders", "Orders"],
   ["/admin/customers", "Customers"],
-  ["/admin/reviews", "Reviews"],
   ["/admin/faqs", "FAQs"],
   ["/admin/settings", "Settings"],
   ["/admin/subscribers", "Subscribers"],

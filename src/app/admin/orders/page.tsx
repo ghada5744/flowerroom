@@ -10,7 +10,14 @@ export const dynamic = "force-dynamic";
 export default async function AdminOrdersPage() {
   if (!(await isAdminAuthenticated())) redirect("/admin/login");
 
+  // Only real paid orders — hide abandoned / cancelled / unpaid checkouts
   const orders = await prisma.order.findMany({
+    where: {
+      OR: [
+        { status: "PAID" },
+        { payment: { status: { in: ["paid", "demo_paid"] } } },
+      ],
+    },
     orderBy: { createdAt: "desc" },
     include: { payment: true },
   });
@@ -18,6 +25,7 @@ export default async function AdminOrdersPage() {
   return (
     <div>
       <h1 className="font-display text-3xl">Orders</h1>
+      <p className="mt-2 text-sm text-muted">Showing orders with successful payment only.</p>
       <div className="mt-6 overflow-x-auto border border-line bg-white">
         <table className="w-full min-w-[760px] text-left text-sm">
           <thead className="border-b border-line bg-cream text-xs uppercase tracking-wider text-muted">
@@ -48,7 +56,7 @@ export default async function AdminOrdersPage() {
             {orders.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-4 py-8 text-center text-muted">
-                  No orders yet
+                  No paid orders yet
                 </td>
               </tr>
             )}
