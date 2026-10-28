@@ -7,12 +7,23 @@ import { useRouter } from "next/navigation";
 export default function AccountRegisterPage() {
   const router = useRouter();
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [marketing, setMarketing] = useState(true);
+
+  function clearField(name: string) {
+    setFieldErrors((prev) => {
+      if (!prev[name]) return prev;
+      const next = { ...prev };
+      delete next[name];
+      return next;
+    });
+  }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
     setLoading(true);
     const form = new FormData(e.currentTarget);
     try {
@@ -28,7 +39,10 @@ export default function AccountRegisterPage() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Registration failed");
+      if (!res.ok) {
+        if (data.fields && typeof data.fields === "object") setFieldErrors(data.fields);
+        throw new Error(data.error || "Registration failed");
+      }
       router.push("/account");
       router.refresh();
     } catch (err) {
@@ -43,9 +57,43 @@ export default function AccountRegisterPage() {
       <p className="mt-2 text-center text-[15px] text-[#6b6b6b]">Join Flower Room for faster checkout</p>
 
       <form onSubmit={onSubmit} className="mt-8 space-y-4">
-        <input id="name" name="name" required autoComplete="name" placeholder="Full name" className="auth-input" />
-        <input id="email" name="email" type="email" required autoComplete="email" placeholder="Email" className="auth-input" />
-        <input id="phone" name="phone" type="tel" autoComplete="tel" placeholder="Phone" className="auth-input" />
+        <div>
+          <input
+            id="name"
+            name="name"
+            required
+            autoComplete="name"
+            placeholder="Full name"
+            className={`auth-input${fieldErrors.name ? " input-error" : ""}`}
+            onChange={() => clearField("name")}
+          />
+          {fieldErrors.name && <p className="field-error text-left">{fieldErrors.name}</p>}
+        </div>
+        <div>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+            placeholder="Email"
+            className={`auth-input${fieldErrors.email ? " input-error" : ""}`}
+            onChange={() => clearField("email")}
+          />
+          {fieldErrors.email && <p className="field-error text-left">{fieldErrors.email}</p>}
+        </div>
+        <div>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            autoComplete="tel"
+            placeholder="Phone"
+            className={`auth-input${fieldErrors.phone ? " input-error" : ""}`}
+            onChange={() => clearField("phone")}
+          />
+          {fieldErrors.phone && <p className="field-error text-left">{fieldErrors.phone}</p>}
+        </div>
         <div className="relative">
           <input
             id="password"
@@ -55,7 +103,8 @@ export default function AccountRegisterPage() {
             minLength={6}
             autoComplete="new-password"
             placeholder="Password (min. 6 characters)"
-            className="auth-input"
+            className={`auth-input${fieldErrors.password ? " input-error" : ""}`}
+            onChange={() => clearField("password")}
           />
           <button
             type="submit"
@@ -67,6 +116,7 @@ export default function AccountRegisterPage() {
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
           </button>
+          {fieldErrors.password && <p className="field-error text-left">{fieldErrors.password}</p>}
         </div>
 
         <label className="flex items-start gap-3 text-[13px] leading-snug text-ink">

@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { createCustomerSession, verifyPassword } from "@/lib/customer-auth";
+import { apiErrorFromUnknown } from "@/lib/form-errors";
 
 const schema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
+  email: z.string().trim().email("Please enter a valid email address."),
+  password: z.string().min(1, "Please enter your password."),
 });
 
 export async function POST(req: Request) {
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
     });
   } catch (err) {
     console.error(err);
-    const message = err instanceof Error ? err.message : "Login failed";
-    return NextResponse.json({ error: message }, { status: 400 });
+    const { status, body } = apiErrorFromUnknown(err, "Login failed. Please try again.");
+    return NextResponse.json(body, { status });
   }
 }

@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { createCustomerSession, hashPassword } from "@/lib/customer-auth";
+import { apiErrorFromUnknown } from "@/lib/form-errors";
 
 const schema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  phone: z.string().min(7).optional().nullable(),
-  password: z.string().min(6),
+  name: z.string().trim().min(2, "Please enter your name."),
+  email: z.string().trim().email("Please enter a valid email address."),
+  phone: z.string().trim().min(7, "Please enter a valid phone number.").optional().nullable(),
+  password: z.string().min(6, "Password must be at least 6 characters."),
   marketingOptIn: z.boolean().optional().default(true),
 });
 
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
     });
   } catch (err) {
     console.error(err);
-    const message = err instanceof Error ? err.message : "Registration failed";
-    return NextResponse.json({ error: message }, { status: 400 });
+    const { status, body } = apiErrorFromUnknown(err, "Registration failed. Please check the form.");
+    return NextResponse.json(body, { status });
   }
 }

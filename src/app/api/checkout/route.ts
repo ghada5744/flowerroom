@@ -4,15 +4,17 @@ import { prisma } from "@/lib/prisma";
 import { generateOrderNumber } from "@/lib/format";
 import { allowDemoPayments, initializePaystack, isPaystackConfigured } from "@/lib/paystack";
 import { getCustomerSession } from "@/lib/customer-auth";
+import { apiErrorFromUnknown } from "@/lib/form-errors";
+import { cancelAbandonedCheckouts } from "@/lib/order-lifecycle";
 
 const schema = z.object({
-  senderName: z.string().min(2),
-  senderEmail: z.string().email(),
-  senderPhone: z.string().min(7),
-  recipientName: z.string().min(2),
-  recipientPhone: z.string().min(7),
-  deliveryAddress: z.string().min(5),
-  deliveryCity: z.string().default("Lagos"),
+  senderName: z.string().trim().min(2, "Please enter your full name."),
+  senderEmail: z.string().trim().email("Please enter a valid email address."),
+  senderPhone: z.string().trim().min(7, "Please enter a valid phone number."),
+  recipientName: z.string().trim().min(2, "Please enter the recipient's name."),
+  recipientPhone: z.string().trim().min(7, "Please enter a valid recipient phone number."),
+  deliveryAddress: z.string().trim().min(5, "Please enter a fuller delivery address."),
+  deliveryCity: z.string().trim().default("Lagos"),
   deliveryDate: z.string().optional().nullable(),
   giftMessage: z.string().optional().nullable(),
   items: z
@@ -23,7 +25,7 @@ const schema = z.object({
         quantity: z.number().int().min(1),
       }),
     )
-    .min(1),
+    .min(1, "Your cart is empty."),
 });
 
 export async function POST(req: Request) {
@@ -64,13 +66,19 @@ export async function POST(req: Request) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
     const session = await getCustomerSession();
 
+    // Drop previous unpaid attempts so My orders / cart stay clean
+    await cancelAbandonedCheckouts({
+      userId: session?.userId,
+      email: body.senderEmail,
+    });
+
     const order = await prisma.order.create({
       data: {
         orderNumber,
         status: "PENDING",
         userId: session?.userId || null,
         senderName: body.senderName,
-        senderEmail: body.senderEmail,
+        senderEmail: body.senderEmail.trim().toLowerCase(),
         senderPhone: body.senderPhone,
         recipientName: body.recipientName,
         recipientPhone: body.recipientPhone,
@@ -129,7 +137,7 @@ export async function POST(req: Request) {
     });
   } catch (err) {
     console.error(err);
-    const message = err instanceof Error ? err.message : "Checkout failed";
-    return NextResponse.json({ error: message }, { status: 400 });
+    const { status, body } = apiErrorFromUnknown(err, "Checkout failed. Please check the form and try again.");
+    return NextResponse.json(body, { status });
   }
 }

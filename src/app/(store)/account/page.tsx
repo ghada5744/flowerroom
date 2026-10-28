@@ -4,13 +4,25 @@ import { getCurrentUser } from "@/lib/customer-auth";
 import { prisma } from "@/lib/prisma";
 import { formatNaira } from "@/lib/format";
 import { AccountLogoutButton } from "@/components/AccountLogoutButton";
+import {
+  cancelAbandonedCheckouts,
+  HIDDEN_FROM_ACCOUNT,
+  orderStatusLabel,
+} from "@/lib/order-lifecycle";
 
 export default async function MyAccountPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/account/login?next=/account");
 
+  // Clean up leftover unpaid checkouts from abandoned Paystack attempts
+  await cancelAbandonedCheckouts({ userId: user.id, email: user.email });
+
+  // My orders = real purchases only (not pending / cancelled checkouts)
   const orders = await prisma.order.findMany({
-    where: { OR: [{ userId: user.id }, { senderEmail: user.email }] },
+    where: {
+      OR: [{ userId: user.id }, { senderEmail: user.email }],
+      status: { notIn: [...HIDDEN_FROM_ACCOUNT] },
+    },
     orderBy: { createdAt: "desc" },
     take: 20,
     include: { payment: true, items: true },
@@ -76,7 +88,9 @@ export default async function MyAccountPage() {
                   </div>
                   <div className="text-right">
                     <p className="font-medium text-magenta">{formatNaira(order.totalKobo)}</p>
-                    <p className="mt-0.5 text-xs tracking-wide uppercase text-muted">{order.status}</p>
+                    <p className="mt-0.5 text-xs tracking-wide uppercase text-muted">
+                      {orderStatusLabel(order.status)}
+                    </p>
                   </div>
                 </li>
               ))}

@@ -9,12 +9,14 @@ function LoginForm() {
   const search = useSearchParams();
   const next = search.get("next") || "/account";
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [marketing, setMarketing] = useState(true);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
     setLoading(true);
     const form = new FormData(e.currentTarget);
     try {
@@ -27,7 +29,10 @@ function LoginForm() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Login failed");
+      if (!res.ok) {
+        if (data.fields && typeof data.fields === "object") setFieldErrors(data.fields);
+        throw new Error(data.error || "Login failed");
+      }
       router.push(next);
       router.refresh();
     } catch (err) {
@@ -50,8 +55,10 @@ function LoginForm() {
             required
             autoComplete="email"
             placeholder="Email"
-            className="auth-input"
+            className={`auth-input${fieldErrors.email ? " input-error" : ""}`}
+            onChange={() => setFieldErrors((p) => ({ ...p, email: "" }))}
           />
+          {fieldErrors.email && <p className="field-error text-left">{fieldErrors.email}</p>}
         </div>
         <div className="relative">
           <input
@@ -61,7 +68,8 @@ function LoginForm() {
             required
             autoComplete="current-password"
             placeholder="Password"
-            className="auth-input"
+            className={`auth-input${fieldErrors.password ? " input-error" : ""}`}
+            onChange={() => setFieldErrors((p) => ({ ...p, password: "" }))}
           />
           <button
             type="submit"
@@ -73,6 +81,7 @@ function LoginForm() {
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
           </button>
+          {fieldErrors.password && <p className="field-error text-left">{fieldErrors.password}</p>}
         </div>
 
         <label className="flex items-start gap-3 text-[13px] leading-snug text-ink">

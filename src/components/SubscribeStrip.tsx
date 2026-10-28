@@ -5,22 +5,41 @@ import { FormEvent, useState } from "react";
 /** Inline subscribe — email/SIGN UP starts at header "Gift Sets". */
 export function SubscribeStrip() {
   const [msg, setMsg] = useState("");
+  const [invalid, setInvalid] = useState(false);
 
   async function onSubscribe(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setMsg("");
+    setInvalid(false);
     const form = new FormData(e.currentTarget);
     const res = await fetch("/api/subscribe", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: form.get("email") }),
     });
-    setMsg(res.ok ? "Thanks for subscribing!" : "Could not subscribe.");
-    if (res.ok) (e.target as HTMLFormElement).reset();
+    if (res.ok) {
+      setMsg("Thanks for subscribing!");
+      (e.target as HTMLFormElement).reset();
+    } else {
+      setInvalid(true);
+      setMsg("Please enter a valid email address.");
+    }
   }
 
   const fields = (
     <>
-      <input name="email" type="email" required placeholder="Email*" aria-label="Email" />
+      <input
+        name="email"
+        type="email"
+        required
+        placeholder="Email*"
+        aria-label="Email"
+        className={invalid ? "input-error" : undefined}
+        onChange={() => {
+          setInvalid(false);
+          setMsg("");
+        }}
+      />
       <button type="submit">SIGN UP</button>
     </>
   );

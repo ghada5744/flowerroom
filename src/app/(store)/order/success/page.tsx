@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ClearCartOnMount } from "@/components/ClearCartOnMount";
 
 type Props = { searchParams: Promise<{ reference?: string; order?: string; demo?: string }> };
 
@@ -6,6 +7,7 @@ export default async function OrderSuccessPage({ searchParams }: Props) {
   const sp = await searchParams;
   return (
     <div className="mx-auto max-w-xl px-4 py-20 text-center">
+      <ClearCartOnMount />
       <p className="text-xs tracking-[0.16em] uppercase text-magenta">Thank you</p>
       <h1 className="font-display mt-2 text-4xl">Order received</h1>
       <p className="mt-4 text-muted">

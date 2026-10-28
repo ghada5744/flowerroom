@@ -4,7 +4,9 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
-    const body = z.object({ email: z.string().email() }).parse(await req.json());
+    const body = z
+      .object({ email: z.string().trim().email("Please enter a valid email address.") })
+      .parse(await req.json());
     await prisma.subscriber.upsert({
       where: { email: body.email },
       create: { email: body.email },
@@ -12,6 +14,9 @@ export async function POST(req: Request) {
     });
     return NextResponse.json({ ok: true });
   } catch {
-    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Please enter a valid email address.", fields: { email: "Please enter a valid email address." } },
+      { status: 400 },
+    );
   }
 }

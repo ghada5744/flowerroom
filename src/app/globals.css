@@ -1358,6 +1358,19 @@ a {
   border-color: var(--magenta);
 }
 
+.input.input-error,
+.input-error {
+  border-color: var(--magenta) !important;
+  background: #fff5f8;
+}
+
+.field-error {
+  margin: 0.35rem 0 0;
+  font-size: 0.8rem;
+  color: var(--magenta);
+  line-height: 1.35;
+}
+
 .label {
   display: block;
   font-size: 0.72rem;

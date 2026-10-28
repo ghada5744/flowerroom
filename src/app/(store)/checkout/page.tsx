@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { useCart } from "@/lib/cart-store";
 import { formatNaira } from "@/lib/format";
+import type { FieldErrors } from "@/lib/form-errors";
 
 type CustomerUser = {
   id: string;
@@ -12,12 +13,16 @@ type CustomerUser = {
   phone: string | null;
 };
 
+function fieldClass(errors: FieldErrors, name: string) {
+  return errors[name] ? "input input-error" : "input";
+}
+
 export default function CheckoutPage() {
   const items = useCart((s) => s.items);
   const subtotalKobo = useCart((s) => s.subtotalKobo);
-  const clear = useCart((s) => s.clear);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [user, setUser] = useState<CustomerUser | null>(null);
 
   useEffect(() => {
@@ -38,9 +43,19 @@ export default function CheckoutPage() {
     );
   }
 
+  function clearField(name: string) {
+    setFieldErrors((prev) => {
+      if (!prev[name]) return prev;
+      const next = { ...prev };
+      delete next[name];
+      return next;
+    });
+  }
+
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
     setLoading(true);
     const form = new FormData(e.currentTarget);
     try {
@@ -65,11 +80,16 @@ export default function CheckoutPage() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Checkout failed");
-      clear();
+      if (!res.ok) {
+        if (data.fields && typeof data.fields === "object") {
+          setFieldErrors(data.fields);
+        }
+        throw new Error(data.error || "Checkout failed. Please check the form.");
+      }
+      // Keep cart until payment succeeds (cleared on the success page)
       window.location.href = data.authorizationUrl;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Checkout failed");
+      setError(err instanceof Error ? err.message : "Checkout failed. Please try again.");
       setLoading(false);
     }
   }
@@ -108,10 +128,12 @@ export default function CheckoutPage() {
               <input
                 id="senderName"
                 name="senderName"
-                className="input"
+                className={fieldClass(fieldErrors, "senderName")}
                 required
                 defaultValue={user?.name || ""}
+                onChange={() => clearField("senderName")}
               />
+              {fieldErrors.senderName && <p className="field-error">{fieldErrors.senderName}</p>}
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
@@ -120,20 +142,24 @@ export default function CheckoutPage() {
                   id="senderEmail"
                   name="senderEmail"
                   type="email"
-                  className="input"
+                  className={fieldClass(fieldErrors, "senderEmail")}
                   required
                   defaultValue={user?.email || ""}
+                  onChange={() => clearField("senderEmail")}
                 />
+                {fieldErrors.senderEmail && <p className="field-error">{fieldErrors.senderEmail}</p>}
               </div>
               <div>
                 <label className="label" htmlFor="senderPhone">Phone</label>
                 <input
                   id="senderPhone"
                   name="senderPhone"
-                  className="input"
+                  className={fieldClass(fieldErrors, "senderPhone")}
                   required
                   defaultValue={user?.phone || ""}
+                  onChange={() => clearField("senderPhone")}
                 />
+                {fieldErrors.senderPhone && <p className="field-error">{fieldErrors.senderPhone}</p>}
               </div>
             </div>
           </fieldset>
@@ -143,34 +169,78 @@ export default function CheckoutPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="label" htmlFor="recipientName">Recipient name</label>
-                <input id="recipientName" name="recipientName" className="input" required />
+                <input
+                  id="recipientName"
+                  name="recipientName"
+                  className={fieldClass(fieldErrors, "recipientName")}
+                  required
+                  onChange={() => clearField("recipientName")}
+                />
+                {fieldErrors.recipientName && <p className="field-error">{fieldErrors.recipientName}</p>}
               </div>
               <div>
                 <label className="label" htmlFor="recipientPhone">Recipient phone</label>
-                <input id="recipientPhone" name="recipientPhone" className="input" required />
+                <input
+                  id="recipientPhone"
+                  name="recipientPhone"
+                  className={fieldClass(fieldErrors, "recipientPhone")}
+                  required
+                  onChange={() => clearField("recipientPhone")}
+                />
+                {fieldErrors.recipientPhone && <p className="field-error">{fieldErrors.recipientPhone}</p>}
               </div>
             </div>
             <div>
               <label className="label" htmlFor="deliveryAddress">Delivery address (Lagos)</label>
-              <textarea id="deliveryAddress" name="deliveryAddress" className="input min-h-24" required />
+              <textarea
+                id="deliveryAddress"
+                name="deliveryAddress"
+                className={`${fieldClass(fieldErrors, "deliveryAddress")} min-h-24`}
+                required
+                onChange={() => clearField("deliveryAddress")}
+              />
+              {fieldErrors.deliveryAddress && <p className="field-error">{fieldErrors.deliveryAddress}</p>}
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="label" htmlFor="deliveryCity">City</label>
-                <input id="deliveryCity" name="deliveryCity" className="input" defaultValue="Lagos" />
+                <input
+                  id="deliveryCity"
+                  name="deliveryCity"
+                  className={fieldClass(fieldErrors, "deliveryCity")}
+                  defaultValue="Lagos"
+                  onChange={() => clearField("deliveryCity")}
+                />
+                {fieldErrors.deliveryCity && <p className="field-error">{fieldErrors.deliveryCity}</p>}
               </div>
               <div>
                 <label className="label" htmlFor="deliveryDate">Preferred delivery date</label>
-                <input id="deliveryDate" name="deliveryDate" type="date" className="input" />
+                <input
+                  id="deliveryDate"
+                  name="deliveryDate"
+                  type="date"
+                  className={fieldClass(fieldErrors, "deliveryDate")}
+                  onChange={() => clearField("deliveryDate")}
+                />
+                {fieldErrors.deliveryDate && <p className="field-error">{fieldErrors.deliveryDate}</p>}
               </div>
             </div>
             <div>
               <label className="label" htmlFor="giftMessage">Gift message</label>
-              <textarea id="giftMessage" name="giftMessage" className="input min-h-20" />
+              <textarea
+                id="giftMessage"
+                name="giftMessage"
+                className={`${fieldClass(fieldErrors, "giftMessage")} min-h-20`}
+                onChange={() => clearField("giftMessage")}
+              />
+              {fieldErrors.giftMessage && <p className="field-error">{fieldErrors.giftMessage}</p>}
             </div>
           </fieldset>
 
-          {error && <p className="text-sm text-magenta">{error}</p>}
+          {error && !Object.keys(fieldErrors).length && <p className="field-error">{error}</p>}
+          {error && Object.keys(fieldErrors).length > 0 && (
+            <p className="field-error">Please fix the highlighted fields and try again.</p>
+          )}
 
           <button type="submit" className="btn-primary" disabled={loading}>
             {loading ? "Redirecting to Paystack…" : `Pay ${formatNaira(subtotalKobo())} with Paystack`}
