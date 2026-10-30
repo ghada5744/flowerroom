@@ -2,8 +2,8 @@ import { prisma } from "@/lib/prisma";
 
 const OPEN_CHECKOUT = ["PENDING", "AWAITING_PAYMENT"] as const;
 
-/** Cancelled checkouts stay out of “My orders”. Unpaid ones stay visible with status. */
-export const HIDDEN_FROM_ACCOUNT = ["CANCELLED"] as const;
+/** Unpaid / cancelled checkouts stay out of “My orders”. */
+export const HIDDEN_FROM_ACCOUNT = ["PENDING", "AWAITING_PAYMENT", "CANCELLED"] as const;
 
 /**
  * Cancel leftover unpaid checkouts for this customer before starting a new one.
