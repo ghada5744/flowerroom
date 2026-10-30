@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/admin-guard";
@@ -34,6 +35,11 @@ export async function DELETE(req: Request) {
     const result = await prisma.order.deleteMany({
       where: { id: { in: orders.map((o) => o.id) }, status: "DELIVERED" },
     });
+
+    revalidatePath("/account");
+    revalidatePath("/admin");
+    revalidatePath("/admin/orders");
+    revalidatePath("/admin/orders/delivered");
 
     return NextResponse.json({ ok: true, deleted: result.count });
   } catch (err) {

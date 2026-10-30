@@ -1,7 +1,16 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/admin-guard";
 import { prisma } from "@/lib/prisma";
+
+function revalidateOrderViews(orderId: string) {
+  revalidatePath("/account");
+  revalidatePath("/admin");
+  revalidatePath("/admin/orders");
+  revalidatePath("/admin/orders/delivered");
+  revalidatePath(`/admin/orders/${orderId}`);
+}
 
 const schema = z.object({
   status: z.string().min(1),
@@ -24,6 +33,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
         ...(body.notes !== undefined ? { notes: body.notes || null } : {}),
       },
     });
+    revalidateOrderViews(id);
     return NextResponse.json(order);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Update failed";
@@ -53,6 +63,7 @@ export async function DELETE(_req: Request, ctx: Ctx) {
     }
 
     await prisma.order.delete({ where: { id } });
+    revalidateOrderViews(id);
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error(err);

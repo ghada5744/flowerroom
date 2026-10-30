@@ -113,14 +113,11 @@ export function DeliveredOrdersTable({ orders }: { orders: DeliveredOrder[] }) {
             <p className="delivered-select-title">Select orders to remove</p>
             <p className="delivered-select-sub">
               {count === 0
-                ? "Tick the ones you want, or select all."
+                ? "Tick orders, or use the box next to Order for all."
                 : `${count} order${count === 1 ? "" : "s"} ready to delete`}
             </p>
           </div>
           <div className="delivered-select-actions">
-            <button type="button" className="delivered-select-all" onClick={toggleAll}>
-              {allSelected ? "Clear all" : "Select all"}
-            </button>
             <button type="button" className="btn-ghost delivered-cancel" onClick={cancelSelectMode}>
               Cancel
             </button>

@@ -1,21 +1,22 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
 import { AccountLogoutButton } from "@/components/AccountLogoutButton";
+import { AccountOrdersPanel } from "@/components/AccountOrdersPanel";
 import { getCurrentUser } from "@/lib/customer-auth";
-import { formatNaira } from "@/lib/format";
 import { HIDDEN_FROM_ACCOUNT } from "@/lib/order-lifecycle";
 import { prisma } from "@/lib/prisma";
+
+export const dynamic = "force-dynamic";
 
 export default async function MyAccountPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/account/login?next=/account");
 
-  // My orders = paid progress only (hide abandoned unpaid checkouts)
   const orders = await prisma.order.findMany({
     where: {
       OR: [{ userId: user.id }, { senderEmail: user.email }],
       status: { notIn: [...HIDDEN_FROM_ACCOUNT] },
+      customerHidden: false,
     },
     orderBy: { createdAt: "desc" },
     take: 20,
@@ -63,31 +64,34 @@ export default async function MyAccountPage() {
               Continue shopping
             </Link>
           </div>
-          {orders.length === 0 ? (
-            <p className="mt-4 text-sm text-muted">You haven&apos;t placed an order yet.</p>
-          ) : (
-            <ul className="mt-4 divide-y divide-line">
-              {orders.map((order) => (
-                <li key={order.id} className="flex flex-wrap items-center justify-between gap-3 py-4 text-sm">
-                  <div className="min-w-0">
-                    <p className="font-medium">{order.orderNumber}</p>
-                    <p className="mt-0.5 text-muted">
-                      {new Date(order.createdAt).toLocaleDateString("en-NG", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}{" "}
-                      · {order.items.length} item{order.items.length === 1 ? "" : "s"}
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-end gap-1.5 text-right">
-                    <p className="font-medium text-magenta">{formatNaira(order.totalKobo)}</p>
-                    <OrderStatusBadge status={order.status} />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
+          <AccountOrdersPanel
+            orders={orders.map((order) => ({
+              id: order.id,
+              orderNumber: order.orderNumber,
+              status: order.status,
+              totalKobo: order.totalKobo,
+              createdAtLabel: new Date(order.createdAt).toLocaleDateString("en-NG", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              }),
+              senderName: order.senderName,
+              senderPhone: order.senderPhone,
+              recipientName: order.recipientName,
+              recipientPhone: order.recipientPhone,
+              deliveryAddress: order.deliveryAddress,
+              deliveryCity: order.deliveryCity,
+              deliveryDate: order.deliveryDate,
+              giftMessage: order.giftMessage,
+              items: order.items.map((item) => ({
+                id: item.id,
+                productName: item.productName,
+                variantName: item.variantName,
+                quantity: item.quantity,
+                lineKobo: item.lineKobo,
+              })),
+            }))}
+          />
         </section>
       </div>
     </div>

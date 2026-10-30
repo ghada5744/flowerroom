@@ -507,6 +507,206 @@ a {
   color: var(--magenta);
 }
 
+.account-order-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+
+.account-order-main {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border: none;
+  background: transparent;
+  padding: 0.25rem 0.35rem;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.15s ease;
+}
+
+.account-order-main:hover {
+  background: rgba(250, 246, 239, 0.9);
+}
+
+.account-order-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+
+.account-order-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.account-order-icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.account-order-icon-btn:hover {
+  color: var(--magenta);
+  background: rgba(194, 24, 91, 0.06);
+}
+
+.account-order-icon-btn.is-danger:hover {
+  color: var(--magenta);
+}
+
+.account-order-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(26, 26, 26, 0.4);
+  backdrop-filter: blur(2px);
+}
+
+.account-order-modal {
+  width: 100%;
+  max-width: 480px;
+  max-height: min(88vh, 720px);
+  overflow: auto;
+  padding: 1.5rem 1.4rem 1.35rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: 0 18px 50px rgba(26, 26, 26, 0.16);
+  animation: admin-confirm-in 0.18s ease-out;
+}
+
+.account-order-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.account-order-kicker {
+  margin: 0;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--magenta);
+}
+
+.account-order-modal-title {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-display, Georgia, "Times New Roman", serif);
+  font-size: 1.55rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.account-order-close {
+  border: none;
+  background: transparent;
+  padding: 0 0.2rem;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.account-order-close:hover {
+  color: var(--magenta);
+}
+
+.account-order-modal-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.account-order-items {
+  margin: 1.15rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.account-order-items li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+
+.account-order-total {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.85rem 0 0;
+  font-size: 1rem;
+}
+
+.account-order-total strong {
+  color: var(--magenta);
+  font-weight: 600;
+}
+
+.account-order-blocks {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1.15rem;
+}
+
+@media (min-width: 480px) {
+  .account-order-blocks {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.account-order-blocks > div,
+.account-order-gift {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  background: var(--cream);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.account-order-block-label {
+  margin: 0 0 0.4rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--magenta);
+}
+
+.account-order-gift {
+  margin-top: 0.85rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+}
+
+.account-order-done {
+  width: 100%;
+  justify-content: center;
+  margin-top: 1.25rem;
+}
+
 .admin-confirm-overlay {
   position: fixed;
   inset: 0;
