@@ -28,10 +28,11 @@ export function ProductForm({ categories, product }: Props) {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [images, setImages] = useState<string[]>(
-    product?.images?.map((img) => img.url).filter(Boolean) ||
-      (product?.imageUrl ? [product.imageUrl] : []),
-  );
+  const [images, setImages] = useState<string[]>(() => {
+    const fromGallery = product?.images?.map((img) => img.url).filter(Boolean) || [];
+    if (fromGallery.length > 0) return fromGallery;
+    return product?.imageUrl ? [product.imageUrl] : [];
+  });
   const [variants, setVariants] = useState<VariantInput[]>(
     product?.variants.map((v) => ({
       id: v.id,

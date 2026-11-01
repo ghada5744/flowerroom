@@ -312,6 +312,33 @@ a {
   padding: 1.25rem;
 }
 
+.admin-upload-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 0.15rem;
+  border: none;
+  background: transparent;
+  color: var(--magenta);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1.5px;
+  cursor: pointer;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+.admin-upload-trigger:hover:not(:disabled) {
+  color: var(--magenta-hover);
+}
+
+.admin-upload-trigger:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
 .admin-customers-toolbar {
   display: flex;
   flex-wrap: wrap;

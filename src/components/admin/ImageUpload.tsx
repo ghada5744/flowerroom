@@ -54,21 +54,28 @@ export function ImageUpload({ value, onChange, folder = "products", label = "Pho
             ref={inputRef}
             type="file"
             accept="image/jpeg,image/png,image/webp,image/gif"
-            className="block w-full max-w-xs text-sm"
+            className="sr-only"
             disabled={uploading}
             onChange={(e) => onFile(e.target.files?.[0])}
           />
-          <p className="text-[12px] text-muted">Upload a photo from your phone or computer (JPG/PNG, max 5MB).</p>
+          <button
+            type="button"
+            className="admin-upload-trigger"
+            disabled={uploading}
+            onClick={() => inputRef.current?.click()}
+          >
+            {uploading ? "Uploading…" : value ? "Change photo" : "+ Add photo"}
+          </button>
+          <p className="text-[12px] text-muted">Upload from your phone or computer (JPG/PNG, max 5MB).</p>
           {value && (
             <button
               type="button"
-              className="text-xs text-magenta hover:underline"
+              className="text-xs font-medium text-magenta underline underline-offset-2"
               onClick={() => onChange(null)}
             >
               Remove photo
             </button>
           )}
-          {uploading && <p className="text-xs text-muted">Uploading…</p>}
           {warning && <p className="text-xs text-muted">{warning}</p>}
           {error && <p className="text-sm text-magenta">{error}</p>}
         </div>

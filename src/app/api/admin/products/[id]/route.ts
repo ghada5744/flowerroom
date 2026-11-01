@@ -57,7 +57,22 @@ export async function PUT(req: Request, ctx: Ctx) {
         ? await uniqueProductSlug(body.name, id)
         : existing.slug;
 
-    const urls = (body.images?.length ? body.images : body.imageUrl ? [body.imageUrl] : []).filter(Boolean);
+    // Prefer gallery from the form; never wipe photos if the client sent an empty list by mistake
+    // while the product still has a cover image on file.
+    let urls = (body.images?.length ? body.images : body.imageUrl ? [body.imageUrl] : []).filter(
+      (u): u is string => Boolean(u),
+    );
+    if (!urls.length && existing.imageUrl) {
+      urls = [existing.imageUrl];
+    }
+    if (!urls.length) {
+      const existingGallery = await prisma.productImage.findMany({
+        where: { productId: id },
+        orderBy: { sortOrder: "asc" },
+        select: { url: true },
+      });
+      urls = existingGallery.map((img) => img.url).filter(Boolean);
+    }
 
     await prisma.$transaction(async (tx) => {
       await tx.product.update({

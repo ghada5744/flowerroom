@@ -69,7 +69,11 @@ export function GalleryEditor({ value, onChange }: Props) {
                     Later
                   </button>
                 )}
-                <button type="button" className="text-magenta" onClick={() => onChange(value.filter((_, idx) => idx !== i))}>
+                <button
+                  type="button"
+                  className="font-medium text-magenta underline underline-offset-2"
+                  onClick={() => onChange(value.filter((_, idx) => idx !== i))}
+                >
                   Remove
                 </button>
               </div>
@@ -82,11 +86,19 @@ export function GalleryEditor({ value, onChange }: Props) {
         ref={inputRef}
         type="file"
         accept="image/jpeg,image/png,image/webp,image/gif"
-        className="block w-full max-w-xs text-sm"
+        className="sr-only"
         disabled={uploading}
         onChange={(e) => onFile(e.target.files?.[0])}
       />
-      {uploading && <p className="mt-2 text-xs text-muted">Uploading…</p>}
+      <button
+        type="button"
+        className="admin-upload-trigger"
+        disabled={uploading}
+        onClick={() => inputRef.current?.click()}
+      >
+        {uploading ? "Uploading…" : value.length ? "+ Add another photo" : "+ Add photo"}
+      </button>
+      <p className="mt-2 text-[12px] text-muted">JPG, PNG or WebP · max 5MB</p>
       {error && <p className="mt-2 text-sm text-magenta">{error}</p>}
     </div>
   );
