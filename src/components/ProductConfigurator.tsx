@@ -222,7 +222,7 @@ export function ProductConfigurator({
         </div>
       )}
 
-      <div className="space-y-2">
+      <div className={soldOut ? "space-y-4" : "space-y-2"}>
         {soldOut && (
           <p className="sold-out-message" role="status">
             This arrangement is sold out right now — you can&apos;t add it to your cart. Please choose another bouquet or message us on WhatsApp.
