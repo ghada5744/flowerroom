@@ -93,6 +93,7 @@ export default async function HomePage() {
                   imageUrl={p.imageUrl}
                   fromKobo={p.variants[0]?.priceKobo ?? 0}
                   badge={p.badge}
+                  soldOut={p.soldOut}
                 />
               ))}
             </div>
@@ -106,6 +107,7 @@ export default async function HomePage() {
                     imageUrl={p.imageUrl}
                     fromKobo={p.variants[0]?.priceKobo ?? 0}
                     badge={p.badge}
+                    soldOut={p.soldOut}
                   />
                 ))}
               </div>

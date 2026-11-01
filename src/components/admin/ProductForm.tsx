@@ -16,6 +16,7 @@ type Props = {
     imageUrl: string | null;
     badge: string | null;
     active: boolean;
+    soldOut?: boolean;
     featured: boolean;
     categoryId: string;
     images?: { url: string }[];
@@ -52,6 +53,7 @@ export function ProductForm({ categories, product }: Props) {
       badge: form.get("badge") || null,
       categoryId: form.get("categoryId"),
       active: form.get("active") === "on",
+      soldOut: form.get("soldOut") === "on",
       featured: form.get("featured") === "on",
       variants: variants.map((v, i) => ({
         id: v.id,
@@ -200,14 +202,20 @@ export function ProductForm({ categories, product }: Props) {
         <input id="badge" name="badge" className="input" defaultValue={product?.badge || ""} placeholder="e.g. Best seller" />
       </div>
 
-      <div className="flex gap-6">
+      <div className="flex flex-wrap gap-6">
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="active" defaultChecked={product?.active ?? true} /> Show in shop
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" name="soldOut" defaultChecked={product?.soldOut ?? false} /> Sold out
         </label>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="featured" defaultChecked={product?.featured ?? false} /> Featured on home
         </label>
       </div>
+      <p className="text-[12px] text-muted">
+        Sold out keeps the product visible with a badge, but customers cannot add it to the cart.
+      </p>
 
       {error && <p className="text-sm text-magenta">{error}</p>}
       <button type="submit" className="btn-primary" disabled={loading}>

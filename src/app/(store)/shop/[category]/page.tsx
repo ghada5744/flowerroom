@@ -69,6 +69,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
                 imageUrl={p.imageUrl}
                 fromKobo={p.variants[0]?.priceKobo ?? 0}
                 badge={p.badge}
+                soldOut={p.soldOut}
               />
             ))}
           </div>

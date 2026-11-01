@@ -1685,6 +1685,40 @@ a {
   background: var(--magenta-hover);
 }
 
+.btn-cart.is-disabled,
+.btn-cart:disabled {
+  background: #b7b0a6;
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+.btn-cart.is-disabled:hover,
+.btn-cart:disabled:hover {
+  background: #b7b0a6;
+}
+
+.sold-out-message {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(194, 24, 91, 0.2);
+  background: rgba(194, 24, 91, 0.06);
+  color: #5c3a45;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.product-soldout-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(26, 26, 26, 0.08);
+  color: #444;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 @media (min-width: 640px) {
   .btn-cart {
     width: auto;
@@ -1859,6 +1893,15 @@ a {
   text-transform: uppercase;
   color: #222;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.product-card-badge-soldout {
+  background: rgba(26, 26, 26, 0.88);
+  color: #fff;
+}
+
+.product-card.is-sold-out .product-card-media img {
+  filter: saturate(0.85);
 }
 
 .product-card-title {

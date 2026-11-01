@@ -21,6 +21,7 @@ const schema = z.object({
   badge: z.string().nullable().optional(),
   categoryId: z.string().min(1),
   active: z.boolean(),
+  soldOut: z.boolean().optional().default(false),
   featured: z.boolean().optional().default(false),
   videoNote: z.string().optional(),
   specs: z.string().nullable().optional(),
@@ -58,6 +59,7 @@ export async function POST(req: Request) {
         badge: body.badge || null,
         categoryId: body.categoryId,
         active: body.active,
+        soldOut: body.soldOut ?? false,
         featured: body.featured ?? false,
         videoNote:
           body.videoNote ||

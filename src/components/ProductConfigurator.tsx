@@ -28,6 +28,7 @@ type Props = {
   balloons: Addon[];
   /** Gift sets already include cake/card/balloons — hide optional extras */
   isGiftSet?: boolean;
+  soldOut?: boolean;
 };
 
 function hasOwnPhoto(url: string | null | undefined) {
@@ -99,6 +100,7 @@ export function ProductConfigurator({
   treats,
   balloons,
   isGiftSet = false,
+  soldOut = false,
 }: Props) {
   const [variantId, setVariantId] = useState(variants[0]?.id || "");
   const [wrapperId, setWrapperId] = useState(wrappers[0]?.id || "");
@@ -151,7 +153,7 @@ export function ProductConfigurator({
   }
 
   function addToCart() {
-    if (!selected || needsWhatsApp) return;
+    if (!selected || needsWhatsApp || soldOut) return;
     const extras = [
       wrapper ? `Wrap: ${wrapper.name}` : null,
       card ? `Card: ${card.name}` : null,
@@ -172,8 +174,12 @@ export function ProductConfigurator({
     router.push("/cart");
   }
 
-  const showExtras = !isGiftSet && !enquireOnly;
-  const buyButton = needsWhatsApp ? (
+  const showExtras = !isGiftSet && !enquireOnly && !soldOut;
+  const buyButton = soldOut ? (
+    <button type="button" className="btn-cart is-disabled" disabled aria-disabled="true">
+      Sold out
+    </button>
+  ) : needsWhatsApp ? (
     <a href={`https://wa.me/${wa}?text=${waMessage}`} target="_blank" rel="noopener noreferrer" className="btn-cart">
       Enquire on WhatsApp
     </a>
@@ -217,12 +223,17 @@ export function ProductConfigurator({
       )}
 
       <div className="space-y-2">
-        {!needsWhatsApp && total !== (selected?.priceKobo || 0) && (
+        {soldOut && (
+          <p className="sold-out-message" role="status">
+            This arrangement is sold out right now — you can&apos;t add it to your cart. Please choose another bouquet or message us on WhatsApp.
+          </p>
+        )}
+        {!soldOut && !needsWhatsApp && total !== (selected?.priceKobo || 0) && (
           <p className="text-sm text-muted">
             Total with options: <strong className="text-ink">{formatNaira(total)}</strong>
           </p>
         )}
-        {hasUnpricedExtras && !enquireOnly && (
+        {hasUnpricedExtras && !enquireOnly && !soldOut && (
           <p className="text-[13px] text-[#555]">
             An extra has no set price yet — continue on WhatsApp so we can confirm the total.
           </p>

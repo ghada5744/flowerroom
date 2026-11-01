@@ -9,15 +9,20 @@ type Props = {
   imageUrl?: string | null;
   fromKobo: number;
   badge?: string | null;
+  soldOut?: boolean;
 };
 
-export function ProductCard({ name, slug, imageUrl, fromKobo, badge }: Props) {
+export function ProductCard({ name, slug, imageUrl, fromKobo, badge, soldOut = false }: Props) {
   return (
-    <Link href={`/product/${slug}`} className="product-card group">
+    <Link href={`/product/${slug}`} className={`product-card group${soldOut ? " is-sold-out" : ""}`}>
       <div className="product-card-media">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={imageUrl || FALLBACK} alt={name} />
-        {badge && <span className="product-card-badge">{badge}</span>}
+        {soldOut ? (
+          <span className="product-card-badge product-card-badge-soldout">Sold out</span>
+        ) : (
+          badge && <span className="product-card-badge">{badge}</span>
+        )}
       </div>
       <h3 className="product-card-title">{name}</h3>
       {fromKobo > 0 && (

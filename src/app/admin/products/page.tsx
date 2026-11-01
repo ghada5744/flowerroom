@@ -25,6 +25,7 @@ export default async function AdminProductsPage() {
     name: p.name,
     imageUrl: p.imageUrl,
     active: p.active,
+    soldOut: p.soldOut,
     category: { id: p.category.id, name: p.category.name },
     fromKobo: p.variants[0]?.priceKobo ?? 0,
   }));

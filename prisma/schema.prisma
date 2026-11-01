@@ -27,6 +27,8 @@ model Product {
   imageUrl    String?
   badge       String?
   active      Boolean          @default(true)
+  /// Visible in shop but cannot be added to cart.
+  soldOut     Boolean          @default(false)
   featured    Boolean          @default(false)
   videoNote   String           @default("Once arranged, your florist will send a video via WhatsApp or email for your approval before delivery.")
   specs       String?

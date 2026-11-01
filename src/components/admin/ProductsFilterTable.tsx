@@ -10,6 +10,7 @@ type ProductRow = {
   name: string;
   imageUrl: string | null;
   active: boolean;
+  soldOut: boolean;
   category: { id: string; name: string };
   fromKobo: number;
 };
@@ -112,7 +113,9 @@ export function ProductsFilterTable({
                 <td className="px-4 py-3 font-medium">{p.name}</td>
                 <td className="px-4 py-3">{p.category.name}</td>
                 <td className="px-4 py-3">{p.fromKobo === 0 ? "Enquire" : formatNaira(p.fromKobo)}</td>
-                <td className="px-4 py-3">{p.active ? "Visible" : "Hidden"}</td>
+                <td className="px-4 py-3">
+                  {!p.active ? "Hidden" : p.soldOut ? "Sold out" : "Visible"}
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-end gap-4">
                     <Link href={`/admin/products/${p.id}`} className="text-xs uppercase tracking-wide text-ink hover:text-magenta">

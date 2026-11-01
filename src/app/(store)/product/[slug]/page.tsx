@@ -61,11 +61,18 @@ export default async function ProductPage({ params }: Props) {
       </p>
 
       <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 lg:items-start">
-        <ProductGallery images={gallery} name={product.name} badge={product.badge} />
+        <ProductGallery
+          images={gallery}
+          name={product.name}
+          badge={product.soldOut ? "Sold out" : product.badge}
+        />
 
         <div className="product-detail-copy">
           <p className="text-[11px] font-semibold tracking-[0.18em] text-magenta uppercase">{product.category.name}</p>
-          <h1 className="mt-2 font-display text-[2.6rem] leading-[1.05] text-ink md:text-5xl">{product.name}</h1>
+          <div className="mt-2 flex flex-wrap items-center gap-3">
+            <h1 className="font-display text-[2.6rem] leading-[1.05] text-ink md:text-5xl">{product.name}</h1>
+            {product.soldOut && <span className="product-soldout-pill">Sold out</span>}
+          </div>
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[#4a4a4a]">{product.description}</p>
 
           {isGiftSet && (
@@ -100,6 +107,7 @@ export default async function ProductPage({ params }: Props) {
               cards={cards}
               treats={treats}
               balloons={balloons}
+              soldOut={product.soldOut}
               isGiftSet={isGiftSet}
             />
           </div>
@@ -127,6 +135,7 @@ export default async function ProductPage({ params }: Props) {
                 imageUrl={p.imageUrl}
                 fromKobo={p.variants[0]?.priceKobo ?? 0}
                 badge={p.badge}
+                soldOut={p.soldOut}
               />
             ))}
           </div>

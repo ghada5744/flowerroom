@@ -18,9 +18,10 @@ type Props = {
   productName: string;
   imageUrl?: string | null;
   variants: Variant[];
+  soldOut?: boolean;
 };
 
-export function AddToCart({ productId, slug, productName, imageUrl, variants }: Props) {
+export function AddToCart({ productId, slug, productName, imageUrl, variants, soldOut = false }: Props) {
   const [variantId, setVariantId] = useState(variants[0]?.id || "");
   const [qty, setQty] = useState(1);
   const addItem = useCart((s) => s.addItem);
@@ -34,6 +35,7 @@ export function AddToCart({ productId, slug, productName, imageUrl, variants }: 
   if (!selected) return null;
 
   function handleAdd(goCheckout = false) {
+    if (soldOut) return;
     addItem(
       {
         productId,
@@ -98,14 +100,20 @@ export function AddToCart({ productId, slug, productName, imageUrl, variants }: 
 
       <p className="font-display text-3xl text-magenta">{formatNaira(selected.priceKobo * qty)}</p>
 
-      <div className="flex flex-wrap gap-3">
-        <button type="button" className="btn-primary" onClick={() => handleAdd(false)}>
-          Add to cart
-        </button>
-        <button type="button" className="btn-ghost" onClick={() => handleAdd(true)}>
-          Buy now
-        </button>
-      </div>
+      {soldOut ? (
+        <p className="sold-out-message" role="status">
+          This arrangement is sold out right now — you can&apos;t add it to your cart.
+        </p>
+      ) : (
+        <div className="flex flex-wrap gap-3">
+          <button type="button" className="btn-primary" onClick={() => handleAdd(false)}>
+            Add to cart
+          </button>
+          <button type="button" className="btn-ghost" onClick={() => handleAdd(true)}>
+            Buy now
+          </button>
+        </div>
+      )}
     </div>
   );
 }

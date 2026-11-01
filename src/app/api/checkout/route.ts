@@ -48,6 +48,9 @@ export async function POST(req: Request) {
       if (!v || v.productId !== item.productId || !v.product.active) {
         throw new Error("Invalid cart item");
       }
+      if (v.product.soldOut) {
+        throw new Error(`${v.product.name} is sold out and can’t be ordered right now.`);
+      }
       const line = v.priceKobo * item.quantity;
       subtotal += line;
       return {
