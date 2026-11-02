@@ -219,21 +219,11 @@ a {
   font-size: 0.9rem;
 }
 
-.cart-line-total {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-}
-
 .cart-line-amount {
   margin: 0;
   font-weight: 600;
   font-size: 0.95rem;
   white-space: nowrap;
-}
-
-.cart-line-trash-desktop {
-  display: none;
 }
 
 .cart-summary {
@@ -284,14 +274,6 @@ a {
   .cart-line-actions {
     flex-shrink: 0;
     gap: 1.25rem;
-  }
-
-  .cart-line-trash-mobile {
-    display: none;
-  }
-
-  .cart-line-trash-desktop {
-    display: inline-flex;
   }
 
   .cart-summary {
