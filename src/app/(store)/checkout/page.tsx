@@ -69,9 +69,12 @@ export default function CheckoutPage() {
     if (checked) {
       setRecipientName(senderName);
       setRecipientPhone(senderPhone);
-      clearField("recipientName");
-      clearField("recipientPhone");
+    } else {
+      setRecipientName("");
+      setRecipientPhone("");
     }
+    clearField("recipientName");
+    clearField("recipientPhone");
   }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -300,9 +303,11 @@ export default function CheckoutPage() {
             <p className="field-error">Please fix the highlighted fields and try again.</p>
           )}
 
-          <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? "Redirecting to Paystack…" : `Pay ${formatNaira(subtotalKobo())} with Paystack`}
-          </button>
+          <div className="flex justify-center pt-1">
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? "Redirecting to Paystack…" : `Pay ${formatNaira(subtotalKobo())} with Paystack`}
+            </button>
+          </div>
           <p className="text-[12px] leading-relaxed text-muted">
             Card details stay on Paystack. Flower Room never stores your card number.
           </p>
