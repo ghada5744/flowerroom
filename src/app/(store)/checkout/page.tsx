@@ -303,14 +303,14 @@ export default function CheckoutPage() {
             <p className="field-error">Please fix the highlighted fields and try again.</p>
           )}
 
-          <div className="flex justify-center pt-1">
+          <div className="flex flex-col items-center gap-3 pt-1">
             <button type="submit" className="btn-primary" disabled={loading}>
               {loading ? "Redirecting to Paystack…" : `Pay ${formatNaira(subtotalKobo())} with Paystack`}
             </button>
+            <p className="max-w-md text-center text-[12px] leading-relaxed text-muted">
+              Card details stay on Paystack. Flower Room never stores your card number.
+            </p>
           </div>
-          <p className="text-[12px] leading-relaxed text-muted">
-            Card details stay on Paystack. Flower Room never stores your card number.
-          </p>
         </form>
       </div>
 
