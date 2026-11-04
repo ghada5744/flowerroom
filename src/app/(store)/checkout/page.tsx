@@ -24,11 +24,23 @@ export default function CheckoutPage() {
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [user, setUser] = useState<CustomerUser | null>(null);
+  const [sameAsSender, setSameAsSender] = useState(false);
+  const [senderName, setSenderName] = useState("");
+  const [senderPhone, setSenderPhone] = useState("");
+  const [recipientName, setRecipientName] = useState("");
+  const [recipientPhone, setRecipientPhone] = useState("");
 
   useEffect(() => {
     fetch("/api/auth/me")
       .then((r) => (r.ok ? r.json() : { user: null }))
-      .then((d) => setUser(d.user ?? null))
+      .then((d) => {
+        const next = (d.user ?? null) as CustomerUser | null;
+        setUser(next);
+        if (next) {
+          setSenderName(next.name || "");
+          setSenderPhone(next.phone || "");
+        }
+      })
       .catch(() => setUser(null));
   }, []);
 
@@ -50,6 +62,16 @@ export default function CheckoutPage() {
       delete next[name];
       return next;
     });
+  }
+
+  function onToggleSameAsSender(checked: boolean) {
+    setSameAsSender(checked);
+    if (checked) {
+      setRecipientName(senderName);
+      setRecipientPhone(senderPhone);
+      clearField("recipientName");
+      clearField("recipientPhone");
+    }
   }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -130,8 +152,13 @@ export default function CheckoutPage() {
                 name="senderName"
                 className={fieldClass(fieldErrors, "senderName")}
                 required
-                defaultValue={user?.name || ""}
-                onChange={() => clearField("senderName")}
+                value={senderName}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSenderName(value);
+                  if (sameAsSender) setRecipientName(value);
+                  clearField("senderName");
+                }}
               />
               {fieldErrors.senderName && <p className="field-error">{fieldErrors.senderName}</p>}
             </div>
@@ -160,8 +187,13 @@ export default function CheckoutPage() {
                   minLength={7}
                   autoComplete="tel"
                   placeholder="Your phone number"
-                  defaultValue={user?.phone || ""}
-                  onChange={() => clearField("senderPhone")}
+                  value={senderPhone}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setSenderPhone(value);
+                    if (sameAsSender) setRecipientPhone(value);
+                    clearField("senderPhone");
+                  }}
                 />
                 {fieldErrors.senderPhone && <p className="field-error">{fieldErrors.senderPhone}</p>}
               </div>
@@ -170,6 +202,14 @@ export default function CheckoutPage() {
 
           <fieldset className="space-y-4">
             <legend className="text-xs tracking-[0.14em] uppercase text-magenta">Recipient & delivery</legend>
+            <label className="flex items-center gap-2 text-sm text-ink">
+              <input
+                type="checkbox"
+                checked={sameAsSender}
+                onChange={(e) => onToggleSameAsSender(e.target.checked)}
+              />
+              I&apos;m ordering for myself (same as sender)
+            </label>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="label" htmlFor="recipientName">Recipient name</label>
@@ -178,7 +218,12 @@ export default function CheckoutPage() {
                   name="recipientName"
                   className={fieldClass(fieldErrors, "recipientName")}
                   required
-                  onChange={() => clearField("recipientName")}
+                  readOnly={sameAsSender}
+                  value={recipientName}
+                  onChange={(e) => {
+                    setRecipientName(e.target.value);
+                    clearField("recipientName");
+                  }}
                 />
                 {fieldErrors.recipientName && <p className="field-error">{fieldErrors.recipientName}</p>}
               </div>
@@ -193,7 +238,12 @@ export default function CheckoutPage() {
                   minLength={7}
                   autoComplete="tel"
                   placeholder="Recipient phone number"
-                  onChange={() => clearField("recipientPhone")}
+                  readOnly={sameAsSender}
+                  value={recipientPhone}
+                  onChange={(e) => {
+                    setRecipientPhone(e.target.value);
+                    clearField("recipientPhone");
+                  }}
                 />
                 {fieldErrors.recipientPhone && <p className="field-error">{fieldErrors.recipientPhone}</p>}
               </div>
