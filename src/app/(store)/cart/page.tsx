@@ -44,7 +44,7 @@ export default function CartPage() {
                   </div>
                   <button
                     type="button"
-                    className="cart-trash-btn"
+                    className="cart-trash-btn cart-trash-mobile"
                     onClick={() => removeItem(item.variantId)}
                     aria-label={`Remove ${item.productName} from cart`}
                     title="Remove from cart"
@@ -79,6 +79,20 @@ export default function CartPage() {
                     </button>
                   </div>
                   <p className="cart-line-amount">{formatNaira(item.unitKobo * item.quantity)}</p>
+                  <button
+                    type="button"
+                    className="cart-trash-btn cart-trash-desktop"
+                    onClick={() => removeItem(item.variantId)}
+                    aria-label={`Remove ${item.productName} from cart`}
+                    title="Remove from cart"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden>
+                      <path d="M4 7h16" />
+                      <path d="M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2" />
+                      <path d="M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12" />
+                      <path d="M10 11v6M14 11v6" />
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>

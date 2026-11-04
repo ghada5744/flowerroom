@@ -226,6 +226,10 @@ a {
   white-space: nowrap;
 }
 
+.cart-trash-desktop {
+  display: none;
+}
+
 .cart-summary {
   margin-top: 1.75rem;
   display: flex;
@@ -274,6 +278,14 @@ a {
   .cart-line-actions {
     flex-shrink: 0;
     gap: 1.25rem;
+  }
+
+  .cart-trash-mobile {
+    display: none;
+  }
+
+  .cart-trash-desktop {
+    display: inline-flex;
   }
 
   .cart-summary {
