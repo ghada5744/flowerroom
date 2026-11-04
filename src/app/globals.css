@@ -219,15 +219,17 @@ a {
   font-size: 0.9rem;
 }
 
+.cart-line-total {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
 .cart-line-amount {
   margin: 0;
   font-weight: 600;
   font-size: 0.95rem;
   white-space: nowrap;
-}
-
-.cart-trash-desktop {
-  display: none;
 }
 
 .cart-summary {
@@ -278,14 +280,6 @@ a {
   .cart-line-actions {
     flex-shrink: 0;
     gap: 1.25rem;
-  }
-
-  .cart-trash-mobile {
-    display: none;
-  }
-
-  .cart-trash-desktop {
-    display: inline-flex;
   }
 
   .cart-summary {
@@ -1107,6 +1101,21 @@ a {
   width: 22px;
   height: 22px;
   display: block;
+}
+
+/* Phone: trash by details. Desktop: trash by price. Only one visible. */
+.cart-trash-btn.cart-trash-desktop {
+  display: none !important;
+}
+
+@media (min-width: 640px) {
+  .cart-trash-btn.cart-trash-mobile {
+    display: none !important;
+  }
+
+  .cart-trash-btn.cart-trash-desktop {
+    display: inline-flex !important;
+  }
 }
 
 .btn-ghost {
