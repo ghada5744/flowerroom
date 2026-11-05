@@ -1806,10 +1806,9 @@ a {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 3;
-  max-height: 520px;
-  object-fit: contain;
+  max-height: 460px;
+  object-fit: cover;
   object-position: center;
-  background: #efe8df;
   animation: gallery-in 0.35s ease;
 }
 
