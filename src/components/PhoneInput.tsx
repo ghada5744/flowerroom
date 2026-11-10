@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // [ISO country code, dial code without "+"] — one entry per dial code.
 const COUNTRIES: [string, string][] = [
@@ -37,6 +37,16 @@ const COUNTRIES: [string, string][] = [
 // Unique dial codes, in list order (so +1 shows the US flag, +7 Russia).
 const OPTIONS = COUNTRIES.filter(([, dial], i) => COUNTRIES.findIndex(([, d]) => d === dial) === i);
 const DIALS = OPTIONS.map(([, dial]) => dial);
+
+let regionNames: Intl.DisplayNames | null = null;
+function countryName(iso: string) {
+  try {
+    regionNames ??= new Intl.DisplayNames(["en"], { type: "region" });
+    return regionNames.of(iso) ?? iso;
+  } catch {
+    return iso;
+  }
+}
 
 function flag(iso: string) {
   return String.fromCodePoint(...[...iso].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65));
@@ -132,26 +142,108 @@ export default function PhoneInput({
     onChange(compose(nextDial, nextLocal));
   }
 
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const listId = `${id}-codes`;
+  const current = OPTIONS.find(([, d]) => d === dial) ?? OPTIONS[0];
+
+  // Close when clicking outside.
+  useEffect(() => {
+    if (!open) return;
+    function onDown(e: MouseEvent | TouchEvent) {
+      if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("touchstart", onDown);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("touchstart", onDown);
+    };
+  }, [open]);
+
+  // Keep the highlighted country visible inside the scrollable list.
+  useEffect(() => {
+    if (!open) return;
+    const el = listRef.current?.children[active] as HTMLElement | undefined;
+    el?.scrollIntoView({ block: "nearest" });
+  }, [open, active]);
+
+  function openList() {
+    if (readOnly) return;
+    setActive(Math.max(0, OPTIONS.findIndex(([, d]) => d === dial)));
+    setOpen(true);
+  }
+
   function onDialChange(next: string) {
     setDial(next);
+    setOpen(false);
     onChange(compose(next, local));
+  }
+
+  function onCodeKeyDown(e: React.KeyboardEvent) {
+    if (readOnly) return;
+    if (!open) {
+      if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) {
+        e.preventDefault();
+        openList();
+      }
+      return;
+    }
+    if (e.key === "Escape" || e.key === "Tab") {
+      setOpen(false);
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActive((i) => Math.min(OPTIONS.length - 1, i + 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActive((i) => Math.max(0, i - 1));
+    } else if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onDialChange(OPTIONS[active][1]);
+    }
   }
 
   return (
     <div className="phone-input">
-      <select
-        aria-label="Country code"
-        className={`${className} phone-input-code`}
-        value={dial}
-        disabled={readOnly}
-        onChange={(e) => onDialChange(e.target.value)}
-      >
-        {OPTIONS.map(([iso, d]) => (
-          <option key={d} value={d}>
-            {flag(iso)} +{d}
-          </option>
-        ))}
-      </select>
+      <div className="phone-input-code-wrap" ref={wrapRef}>
+        <button
+          type="button"
+          className={`${className} phone-input-code`}
+          aria-label={`Country code: ${countryName(current[0])} +${current[1]}`}
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          aria-controls={listId}
+          disabled={readOnly}
+          onClick={() => (open ? setOpen(false) : openList())}
+          onKeyDown={onCodeKeyDown}
+        >
+          <span>
+            {flag(current[0])} +{current[1]}
+          </span>
+          <span aria-hidden className="phone-input-caret">▾</span>
+        </button>
+        {open && (
+          <ul id={listId} role="listbox" ref={listRef} className="phone-input-list">
+            {OPTIONS.map(([iso, d], i) => (
+              <li
+                key={d}
+                role="option"
+                aria-selected={d === dial}
+                className={`phone-input-option${i === active ? " is-active" : ""}${d === dial ? " is-selected" : ""}`}
+                onMouseEnter={() => setActive(i)}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => onDialChange(d)}
+              >
+                <span>{flag(iso)}</span>
+                <span className="phone-input-country">{countryName(iso)}</span>
+                <span className="phone-input-dial">+{d}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
       <input
         id={id}
         type="tel"

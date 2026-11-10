@@ -2394,20 +2394,84 @@ a {
   gap: 0.5rem;
 }
 
+.phone-input-code-wrap {
+  position: relative;
+  flex: none;
+}
+
 .phone-input .phone-input-code {
   width: 6.75rem;
-  flex: none;
-  padding-right: 0.4rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+  padding-right: 0.5rem;
+  text-align: left;
   cursor: pointer;
 }
 
 .phone-input .phone-input-code:disabled {
   cursor: default;
-  opacity: 1;
-  color: var(--ink);
 }
 
-.phone-input input {
+.phone-input-caret {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* Always opens below the field; shows 5 countries, the rest scroll. */
+.phone-input-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 50;
+  width: 16rem;
+  max-width: calc(100vw - 2rem);
+  max-height: calc(5 * 2.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 2px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+}
+
+.phone-input-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 2.5rem;
+  padding: 0 0.85rem;
+  font-size: 0.9rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.phone-input-option.is-active {
+  background: #fdf0f5;
+}
+
+.phone-input-option.is-selected {
+  font-weight: 600;
+}
+
+.phone-input-country {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.phone-input-dial {
+  color: var(--muted);
+}
+
+.phone-input > input {
   min-width: 0;
   flex: 1;
 }
