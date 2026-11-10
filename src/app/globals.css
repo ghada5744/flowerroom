@@ -2389,6 +2389,29 @@ a {
   border-color: var(--magenta);
 }
 
+.phone-input {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.phone-input .phone-input-code {
+  width: 6.75rem;
+  flex: none;
+  padding-right: 0.4rem;
+  cursor: pointer;
+}
+
+.phone-input .phone-input-code:disabled {
+  cursor: default;
+  opacity: 1;
+  color: var(--ink);
+}
+
+.phone-input input {
+  min-width: 0;
+  flex: 1;
+}
+
 .input.input-error,
 .input-error {
   border-color: var(--magenta) !important;

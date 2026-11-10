@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
+import PhoneInput from "@/components/PhoneInput";
 import { useCart } from "@/lib/cart-store";
 import { formatNaira } from "@/lib/format";
 import type { FieldErrors } from "@/lib/form-errors";
@@ -181,18 +182,14 @@ export default function CheckoutPage() {
               </div>
               <div>
                 <label className="label" htmlFor="senderPhone">Phone</label>
-                <input
+                <PhoneInput
                   id="senderPhone"
                   name="senderPhone"
-                  type="tel"
                   className={fieldClass(fieldErrors, "senderPhone")}
                   required
-                  minLength={7}
-                  autoComplete="tel"
                   placeholder="Your phone number"
                   value={senderPhone}
-                  onChange={(e) => {
-                    const value = e.target.value;
+                  onChange={(value) => {
                     setSenderPhone(value);
                     if (sameAsSender) setRecipientPhone(value);
                     clearField("senderPhone");
@@ -232,19 +229,16 @@ export default function CheckoutPage() {
               </div>
               <div>
                 <label className="label" htmlFor="recipientPhone">Recipient phone</label>
-                <input
+                <PhoneInput
                   id="recipientPhone"
                   name="recipientPhone"
-                  type="tel"
                   className={fieldClass(fieldErrors, "recipientPhone")}
                   required
-                  minLength={7}
-                  autoComplete="tel"
                   placeholder="Recipient phone number"
                   readOnly={sameAsSender}
                   value={recipientPhone}
-                  onChange={(e) => {
-                    setRecipientPhone(e.target.value);
+                  onChange={(value) => {
+                    setRecipientPhone(value);
                     clearField("recipientPhone");
                   }}
                 />
