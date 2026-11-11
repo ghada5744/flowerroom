@@ -31,6 +31,8 @@ export function proxy(request: NextRequest) {
   if (
     pathname.startsWith("/admin") ||
     pathname.startsWith("/api/admin") ||
+    // Paystack's servers have no preview cookie; the webhook must never be rewritten.
+    pathname === "/api/paystack/webhook" ||
     pathname.startsWith("/coming-soon")
   ) {
     return NextResponse.next();

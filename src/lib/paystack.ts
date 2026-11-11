@@ -1,3 +1,5 @@
+import { createHmac, timingSafeEqual } from "node:crypto";
+
 const BASE = "https://api.paystack.co";
 
 function secretKey() {
@@ -47,13 +49,26 @@ export async function verifyPaystack(reference: string) {
   if (!res.ok || !data.status) {
     throw new Error(data.message || "Paystack verify failed");
   }
-  return data.data as {
-    status: string;
-    reference: string;
-    amount: number;
-    paid_at?: string;
-    gateway_response?: string;
-  };
+  return data.data as PaystackTransaction;
+}
+
+export type PaystackTransaction = {
+  status: string;
+  reference: string;
+  amount: number;
+  currency: string;
+  paid_at?: string;
+  gateway_response?: string;
+};
+
+/** Checks the x-paystack-signature header: HMAC SHA512 of the raw body with the secret key. */
+export function isValidPaystackSignature(rawBody: string, signature: string | null) {
+  const key = secretKey();
+  if (!key || !signature) return false;
+  const expected = createHmac("sha512", key).update(rawBody).digest("hex");
+  const a = Buffer.from(expected, "utf8");
+  const b = Buffer.from(signature, "utf8");
+  return a.length === b.length && timingSafeEqual(a, b);
 }
 
 export function isPaystackConfigured() {
