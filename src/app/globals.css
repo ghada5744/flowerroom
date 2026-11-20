@@ -3373,6 +3373,11 @@ a {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: start;
   gap: 2rem;
+  /* flowers.ae: photos stop growing at ~447px on big screens */
+  width: 100%;
+  max-width: 1410px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .range-card {
