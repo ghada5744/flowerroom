@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { CategoryGrid } from "@/components/CategoryGrid";
 import { FaqAccordion } from "@/components/FaqAccordion";
-import { ProductCard } from "@/components/ProductCard";
 import { ReviewsCarousel, ReviewsSummary } from "@/components/ReviewsStrip";
 import { ShopSidebar } from "@/components/ShopSidebar";
 import { SubscribeStrip } from "@/components/SubscribeStrip";
@@ -12,16 +11,7 @@ import { getSiteSettings } from "@/lib/settings";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [allPriced, reviews, faqs, tiles, settings] = await Promise.all([
-    prisma.product.findMany({
-      where: {
-        active: true,
-        variants: { some: { active: true, priceKobo: { gt: 0 } } },
-      },
-      include: { variants: { where: { active: true }, orderBy: { priceKobo: "asc" } } },
-      orderBy: [{ featured: "desc" }, { name: "asc" }],
-      take: 8,
-    }),
+  const [reviews, faqs, tiles, settings] = await Promise.all([
     prisma.review.findMany({
       where: { published: true, rating: 5 },
       orderBy: { sortOrder: "asc" },
@@ -31,9 +21,6 @@ export default async function HomePage() {
     getCategoryTiles(),
     getSiteSettings(),
   ]);
-
-  const featured = allPriced.slice(0, 4);
-  const more = allPriced.slice(4, 8);
 
   const faqList =
     faqs.length > 0
@@ -84,8 +71,10 @@ export default async function HomePage() {
           </aside>
 
           <div className="main-rail-right">
-            {/* flowers.ae: "Our Complete Range" photos first */}
-            <div className="range-block">
+            <ReviewsCarousel reviews={reviews} />
+
+            {/* flowers.ae: "Our Complete Range" photos after the reviews */}
+            <div className="range-block mt-8">
               <div className="range-header">
                 <h2 className="range-heading">Our Complete Range</h2>
                 <p className="range-intro">
@@ -97,37 +86,6 @@ export default async function HomePage() {
               </div>
               <CategoryGrid tiles={tiles.topLevel} />
             </div>
-
-            <ReviewsCarousel reviews={reviews} />
-
-            <div className="product-grid mt-8">
-              {featured.map((p) => (
-                <ProductCard
-                  key={p.id}
-                  name={p.name}
-                  slug={p.slug}
-                  imageUrl={p.imageUrl}
-                  fromKobo={p.variants[0]?.priceKobo ?? 0}
-                  badge={p.badge}
-                  soldOut={p.soldOut}
-                />
-              ))}
-            </div>
-            {more.length > 0 && (
-              <div className="product-grid mt-8">
-                {more.map((p) => (
-                  <ProductCard
-                    key={p.id}
-                    name={p.name}
-                    slug={p.slug}
-                    imageUrl={p.imageUrl}
-                    fromKobo={p.variants[0]?.priceKobo ?? 0}
-                    badge={p.badge}
-                    soldOut={p.soldOut}
-                  />
-                ))}
-              </div>
-            )}
 
             <div className="mt-12 text-center">
               <Link
