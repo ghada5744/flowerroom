@@ -5,10 +5,26 @@ import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slugify";
 
 const schema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1).optional(),
   description: z.string().nullable().optional(),
   sortOrder: z.number().int().optional(),
+  parentId: z.string().nullable().optional(),
+  imageUrl: z.string().nullable().optional(),
 });
+
+/** True if `candidateId` is `id` itself or one of its sub-sections (would make a loop) */
+async function isSelfOrDescendant(id: string, candidateId: string) {
+  let cur: string | null = candidateId;
+  while (cur) {
+    if (cur === id) return true;
+    const row: { parentId: string | null } | null = await prisma.category.findUnique({
+      where: { id: cur },
+      select: { parentId: true },
+    });
+    cur = row?.parentId ?? null;
+  }
+  return false;
+}
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -21,9 +37,21 @@ export async function PUT(req: Request, ctx: Ctx) {
     const existing = await prisma.category.findUnique({ where: { id } });
     if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+    let parentId = existing.parentId;
+    if (body.parentId !== undefined) {
+      parentId = body.parentId || null;
+      if (parentId && (await isSelfOrDescendant(id, parentId))) {
+        return NextResponse.json(
+          { error: "A section can't be placed inside itself or one of its own sub-sections." },
+          { status: 400 },
+        );
+      }
+    }
+
+    const name = body.name?.trim() || existing.name;
     let slug = existing.slug;
-    if (body.name.trim() !== existing.name) {
-      const base = slugify(body.name) || "section";
+    if (name !== existing.name) {
+      const base = slugify(name) || "section";
       slug = base;
       let n = 1;
       while (true) {
@@ -36,10 +64,12 @@ export async function PUT(req: Request, ctx: Ctx) {
     const category = await prisma.category.update({
       where: { id },
       data: {
-        name: body.name.trim(),
+        name,
         slug,
         description: body.description ?? existing.description,
         sortOrder: body.sortOrder ?? existing.sortOrder,
+        parentId,
+        imageUrl: body.imageUrl !== undefined ? body.imageUrl || null : existing.imageUrl,
       },
     });
     return NextResponse.json(category);
@@ -53,6 +83,13 @@ export async function DELETE(_req: Request, ctx: Ctx) {
   const denied = await requireAdmin();
   if (denied) return denied;
   const { id } = await ctx.params;
+  const subCount = await prisma.category.count({ where: { parentId: id } });
+  if (subCount > 0) {
+    return NextResponse.json(
+      { error: `This section has ${subCount} sub-section(s). Move or delete them first.` },
+      { status: 400 },
+    );
+  }
   const count = await prisma.product.count({ where: { categoryId: id } });
   if (count > 0) {
     return NextResponse.json(

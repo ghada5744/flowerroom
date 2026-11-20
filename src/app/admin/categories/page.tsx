@@ -17,8 +17,9 @@ export default async function AdminCategoriesPage() {
     <div>
       <h1 className="font-display text-3xl">Shop sections</h1>
       <p className="mt-2 max-w-2xl text-sm text-muted">
-        Create and rename the categories products appear under (Hand Tied Bouquets, Gift Sets, etc.).
-        Then assign each product to the right section when you add it.
+        The categories products appear under. Top-level sections show on the homepage; sub-sections
+        (e.g. Hat Boxes inside Signature Arrangements) show as photo tiles when a customer opens the
+        parent. Add a photo to each so customers can see what&apos;s inside.
       </p>
       <div className="mt-8">
         <CategoryManager categories={categories} />

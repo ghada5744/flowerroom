@@ -10,7 +10,7 @@ const NAV = [
   { href: "/shop", label: "Our Complete Range" },
   { href: "/shop/hand-tied-bouquets", label: "Hand Tied Bouquets" },
   { href: "/shop/gift-sets", label: "Gift Sets" },
-  { href: "/product/roses", label: "Roses" },
+  { href: "/shop/roses", label: "Roses" },
   { href: "/shop/signature-arrangements", label: "Signature Arrangements" },
 ];
 
@@ -27,7 +27,7 @@ type Settings = {
 };
 
 type CustomerUser = { id: string; name: string; email: string } | null;
-type CategoryLink = { name: string; slug: string };
+type CategoryLink = { id: string; name: string; slug: string; parentId: string | null };
 
 export function Header({ settings, categories }: { settings: Settings; categories: CategoryLink[] }) {
   const count = useCart((s) => s.items.reduce((n, i) => n + i.quantity, 0));

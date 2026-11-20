@@ -8,6 +8,8 @@ const schema = z.object({
   name: z.string().min(1),
   description: z.string().nullable().optional(),
   sortOrder: z.number().int().optional(),
+  parentId: z.string().nullable().optional(),
+  imageUrl: z.string().nullable().optional(),
 });
 
 export async function GET() {
@@ -31,13 +33,19 @@ export async function POST(req: Request) {
     while (await prisma.category.findUnique({ where: { slug } })) {
       slug = `${base}-${n++}`;
     }
-    const maxSort = await prisma.category.aggregate({ _max: { sortOrder: true } });
+    const parentId = body.parentId || null;
+    if (parentId && !(await prisma.category.findUnique({ where: { id: parentId } }))) {
+      return NextResponse.json({ error: "Parent section not found" }, { status: 400 });
+    }
+    const maxSort = await prisma.category.aggregate({ _max: { sortOrder: true }, where: { parentId } });
     const category = await prisma.category.create({
       data: {
         name: body.name.trim(),
         slug,
         description: body.description || null,
         sortOrder: body.sortOrder ?? (maxSort._max.sortOrder ?? 0) + 1,
+        parentId,
+        imageUrl: body.imageUrl || null,
       },
     });
     return NextResponse.json(category);

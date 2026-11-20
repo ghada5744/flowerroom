@@ -4,20 +4,15 @@ import { ProductCard } from "@/components/ProductCard";
 import { ReviewsCarousel, ReviewsSummary } from "@/components/ReviewsStrip";
 import { ShopSidebar } from "@/components/ShopSidebar";
 import { SubscribeStrip } from "@/components/SubscribeStrip";
+import { CategoryGrid } from "@/components/CategoryGrid";
+import { getCategoryTiles } from "@/lib/categories";
 import { prisma } from "@/lib/prisma";
 import { getSiteSettings } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
-/** Shorter tile names for the "Our Complete Range" grid */
-const RANGE_LABELS: Record<string, string> = {
-  "gift-sets": "Gift Sets",
-  "sweet-savoury": "Add-ons",
-  plants: "Plants",
-};
-
 export default async function HomePage() {
-  const [allPriced, reviews, faqs, categories, settings] = await Promise.all([
+  const [allPriced, reviews, faqs, tiles, settings] = await Promise.all([
     prisma.product.findMany({
       where: {
         active: true,
@@ -33,20 +28,11 @@ export default async function HomePage() {
       take: 40,
     }),
     prisma.faq.findMany({ where: { published: true }, orderBy: { sortOrder: "asc" } }),
-    prisma.category.findMany({
-      orderBy: { sortOrder: "asc" },
-      include: {
-        products: {
-          where: { active: true, imageUrl: { not: null } },
-          orderBy: [{ featured: "desc" }, { name: "asc" }],
-          select: { imageUrl: true },
-          take: 1,
-        },
-      },
-    }),
+    getCategoryTiles(),
     getSiteSettings(),
   ]);
 
+  const categories = tiles.all;
   const featured = allPriced.slice(0, 4);
   const more = allPriced.slice(4, 8);
 
@@ -109,19 +95,7 @@ export default async function HomePage() {
                   arrangement for every occasion.
                 </p>
               </div>
-              <div className="range-grid">
-                {categories.map((c) => (
-                  <Link key={c.id} href={`/shop/${c.slug}`} className="range-card">
-                    <div className="range-card-media">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={c.products[0]?.imageUrl || "/images/lilac.jpg"} alt={c.name} loading="lazy" />
-                    </div>
-                    <span className="range-card-title">
-                      {RANGE_LABELS[c.slug] ?? c.name}
-                    </span>
-                  </Link>
-                ))}
-              </div>
+              <CategoryGrid tiles={tiles.topLevel} />
             </div>
 
             <ReviewsCarousel reviews={reviews} />

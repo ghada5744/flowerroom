@@ -1504,6 +1504,30 @@ a {
   color: var(--magenta);
 }
 
+.shop-sidebar-subrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.shop-sidebar-subrow > a {
+  flex: 1;
+}
+
+.shop-sidebar-subtoggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #1a1a1a;
+  cursor: pointer;
+}
+
 .shop-sidebar-sub--nested {
   margin: 0;
   padding: 0 0 0.1rem 1rem;
@@ -2150,6 +2174,22 @@ a {
 }
 
 /* Related products — between compact and full shop grid */
+/* Category page (after clicking a category): square photos like flowers.ae */
+.product-grid--category {
+  gap: 2rem 1.25rem;
+}
+
+.product-grid--category .product-card-media {
+  aspect-ratio: 1 / 1;
+}
+
+@media (min-width: 1100px) {
+  .product-grid--category {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem 1.75rem;
+  }
+}
+
 .product-grid--compact {
   max-width: 1120px;
   margin-left: auto;

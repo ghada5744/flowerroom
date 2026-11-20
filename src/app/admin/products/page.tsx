@@ -3,13 +3,14 @@ import { redirect } from "next/navigation";
 import { ProductsFilterTable } from "@/components/admin/ProductsFilterTable";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { categoryOptions } from "@/lib/category-path";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminProductsPage() {
   if (!(await isAdminAuthenticated())) redirect("/admin/login");
 
-  const [products, sections] = await Promise.all([
+  const [products, allSections] = await Promise.all([
     prisma.product.findMany({
       include: {
         category: true,
@@ -20,13 +21,16 @@ export default async function AdminProductsPage() {
     prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),
   ]);
 
+  const paths = new Map(categoryOptions(allSections).map((o) => [o.id, o.label]));
+  const sections = categoryOptions(allSections).map((o) => ({ id: o.id, name: o.label }));
+
   const rows = products.map((p) => ({
     id: p.id,
     name: p.name,
     imageUrl: p.imageUrl,
     active: p.active,
     soldOut: p.soldOut,
-    category: { id: p.category.id, name: p.category.name },
+    category: { id: p.category.id, name: paths.get(p.category.id) ?? p.category.name },
     fromKobo: p.variants[0]?.priceKobo ?? 0,
   }));
 

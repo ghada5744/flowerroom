@@ -28,12 +28,16 @@ export function ProductsFilterTable({
   const filtered = useMemo(() => {
     const q = nameQuery.trim().toLowerCase();
     return products.filter((p) => {
-      if (sectionId && p.category.id !== sectionId) return false;
+      if (sectionId && p.category.id !== sectionId) {
+        // Picking a parent section also shows products in its sub-sections
+        const label = sections.find((s) => s.id === sectionId)?.name;
+        if (!label || !p.category.name.startsWith(`${label} › `)) return false;
+      }
       if (!q) return true;
       const name = p.name.toLowerCase();
       return name.startsWith(q) || name.includes(q);
     });
-  }, [products, nameQuery, sectionId]);
+  }, [products, nameQuery, sectionId, sections]);
 
   const active = Boolean(nameQuery.trim() || sectionId);
 

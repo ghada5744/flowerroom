@@ -7,7 +7,7 @@ import { getSiteSettings } from "@/lib/settings";
 export default async function StoreLayout({ children }: { children: React.ReactNode }) {
   const [settings, categories] = await Promise.all([
     getSiteSettings(),
-    prisma.category.findMany({ orderBy: { sortOrder: "asc" }, select: { name: true, slug: true } }),
+    prisma.category.findMany({ orderBy: { sortOrder: "asc" }, select: { id: true, name: true, slug: true, parentId: true } }),
   ]);
 
   return (

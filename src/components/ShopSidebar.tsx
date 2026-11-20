@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
-type Cat = { name: string; slug: string };
+type Cat = { id: string; name: string; slug: string; parentId?: string | null };
 
 type NavChild = {
   href: string;
@@ -17,89 +17,67 @@ type NavGroup = {
   type: "group";
   id: string;
   label: string;
+  /** The group's own page (opening it keeps the dropdown open) */
+  href?: string;
   children: NavChild[];
 };
 type NavItem = NavLink | NavGroup;
 
-function typeChild(category: string, type: string, label: string): NavChild {
-  return { href: `/shop/${category}?type=${type}`, label, match: { type } };
+const SHORT_LABELS: Record<string, string> = { "sweet-savoury": "Add-ons" };
+
+/** "Red Roses" under "Roses" → "Red" */
+function childLabel(child: Cat, parent: Cat) {
+  const suffix = ` ${parent.name}`;
+  return child.name.endsWith(suffix) ? child.name.slice(0, -suffix.length) : child.name;
 }
 
 function buildNav(categories: Cat[]): NavItem[] {
-  const bySlug = Object.fromEntries(categories.map((c) => [c.slug, c]));
+  const childrenOf = (id: string | null) => categories.filter((c) => (c.parentId ?? null) === id);
 
-  const items: NavItem[] = [{ type: "link", href: "/shop", label: "Shop all" }];
+  const toChild = (c: Cat, parent: Cat): NavChild => {
+    const kids = childrenOf(c.id);
+    return {
+      href: `/shop/${c.slug}`,
+      label: childLabel(c, parent),
+      ...(kids.length ? { children: kids.map((k) => toChild(k, c)) } : {}),
+    };
+  };
 
-  if (bySlug["hand-tied-bouquets"]) {
-    items.push({
-      type: "group",
-      id: "bouquets",
-      label: bySlug["hand-tied-bouquets"].name,
-      children: [
-        typeChild("hand-tied-bouquets", "mixed", "Mixed Bouquets"),
-        {
-          ...typeChild("hand-tied-bouquets", "roses", "Roses"),
-          children: (["red", "pink", "white"] as const).map((color) => ({
-            href: `/shop/hand-tied-bouquets?type=roses&color=${color}`,
-            label: color[0].toUpperCase() + color.slice(1),
-            match: { type: "roses", color },
-          })),
-        },
-      ],
-    });
-  }
-
-  items.push({
+  const occasion: NavGroup = {
     type: "group",
     id: "occasion",
     label: "Shop by Occasion",
-    children: [
-      {
-        href: "/shop/gift-sets?occasion=birthday",
-        label: "Birthday",
-        match: { occasion: "birthday" },
-      },
-      {
-        href: "/shop/gift-sets?occasion=anniversary",
-        label: "Anniversary",
-        match: { occasion: "anniversary" },
-      },
-      {
-        href: "/shop/gift-sets?occasion=congratulations",
-        label: "Congratulations",
-        match: { occasion: "congratulations" },
-      },
-      {
-        href: "/shop/gift-sets?occasion=apology",
-        label: "Apology",
-        match: { occasion: "apology" },
-      },
-    ],
-  });
+    children: (["birthday", "anniversary", "congratulations", "apology"] as const).map((o) => ({
+      href: `/shop/gift-sets?occasion=${o}`,
+      label: o[0].toUpperCase() + o.slice(1),
+      match: { occasion: o },
+    })),
+  };
 
-  if (bySlug["signature-arrangements"]) {
-    items.push({
-      type: "group",
-      id: "signature",
-      label: bySlug["signature-arrangements"].name,
-      children: [
-        typeChild("signature-arrangements", "baskets", "Baskets"),
-        typeChild("signature-arrangements", "giant-vases", "Giant Vases"),
-        typeChild("signature-arrangements", "standing-bouquets", "Standing Bouquets"),
-        typeChild("signature-arrangements", "hat-boxes", "Hat Boxes"),
-      ],
-    });
-  }
+  const items: NavItem[] = [{ type: "link", href: "/shop", label: "Shop all" }];
+  let occasionAdded = false;
 
-  for (const slug of ["events-bridal", "sweet-savoury", "plants"] as const) {
-    const cat = bySlug[slug];
-    if (!cat) continue;
-    items.push({
-      type: "link",
-      href: `/shop/${cat.slug}`,
-      label: slug === "sweet-savoury" ? "Add-ons" : cat.name,
-    });
+  for (const c of childrenOf(null)) {
+    // Gift sets are reached through "Shop by Occasion"
+    if (c.slug === "gift-sets") continue;
+    const kids = childrenOf(c.id);
+    if (kids.length) {
+      items.push({
+        type: "group",
+        id: c.id,
+        label: c.name,
+        href: `/shop/${c.slug}`,
+        children: kids.map((k) => toChild(k, c)),
+      });
+    } else {
+      items.push({ type: "link", href: `/shop/${c.slug}`, label: SHORT_LABELS[c.slug] ?? c.name });
+    }
+    if (c.slug === "hand-tied-bouquets") {
+      items.push(occasion);
+      occasionAdded = true;
+    }
   }
+  if (!occasionAdded) items.splice(1, 0, occasion);
 
   return items;
 }
@@ -124,7 +102,7 @@ function pathOnly(href: string) {
 
 function isActivePath(pathname: string, href: string) {
   const path = pathOnly(href);
-  return pathname === path || (path !== "/shop" && pathname.startsWith(path));
+  return pathname === path || (path !== "/shop" && pathname.startsWith(`${path}/`));
 }
 
 function isChildActive(pathname: string, searchParams: URLSearchParams, child: NavChild) {
@@ -138,30 +116,35 @@ function isChildActive(pathname: string, searchParams: URLSearchParams, child: N
   return isActivePath(pathname, child.href);
 }
 
+/** Which dropdowns should be open for the current page */
+function activeOpenKeys(items: NavItem[], pathname: string, searchParams: URLSearchParams) {
+  const keys: Record<string, boolean> = {};
+  for (const item of items) {
+    if (item.type !== "group") continue;
+    if (
+      (item.href && isActivePath(pathname, item.href)) ||
+      item.children.some((c) => isChildActive(pathname, searchParams, c))
+    ) {
+      keys[item.id] = true;
+    }
+    for (const c of item.children) {
+      if (c.children && isChildActive(pathname, searchParams, c)) keys[`${item.id}/${c.label}`] = true;
+    }
+  }
+  return keys;
+}
+
 function ShopSidebarInner({ categories }: { categories: Cat[] }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const items = buildNav(categories);
 
-  const initiallyOpen = items.reduce<Record<string, boolean>>((acc, item) => {
-    if (item.type === "group") {
-      acc[item.id] = item.children.some((c) => isChildActive(pathname, searchParams, c));
-    }
-    return acc;
-  }, {});
-
-  const [open, setOpen] = useState<Record<string, boolean>>(initiallyOpen);
+  const [open, setOpen] = useState<Record<string, boolean>>(() =>
+    activeOpenKeys(items, pathname, searchParams),
+  );
 
   useEffect(() => {
-    setOpen((prev) => {
-      const next = { ...prev };
-      for (const item of items) {
-        if (item.type === "group" && item.children.some((c) => isChildActive(pathname, searchParams, c))) {
-          next[item.id] = true;
-        }
-      }
-      return next;
-    });
+    setOpen((prev) => ({ ...prev, ...activeOpenKeys(items, pathname, searchParams) }));
     // eslint-disable-next-line react-hooks/exhaustive-deps -- reopen when route / query changes
   }, [pathname, searchParams]);
 
@@ -201,10 +184,32 @@ function ShopSidebarInner({ categories }: { categories: Cat[] }) {
                     const active = isChildActive(pathname, searchParams, child);
                     return (
                       <li key={`${item.id}-${child.label}`}>
-                        <Link href={child.href} className={active ? "is-active" : undefined}>
-                          {child.label}
-                        </Link>
-                        {child.children && (
+                        {child.children ? (
+                          <div className="shop-sidebar-subrow">
+                            <Link href={child.href} className={active ? "is-active" : undefined}>
+                              {child.label}
+                            </Link>
+                            <button
+                              type="button"
+                              className="shop-sidebar-subtoggle"
+                              aria-label={`Show ${child.label} options`}
+                              aria-expanded={Boolean(open[`${item.id}/${child.label}`])}
+                              onClick={() =>
+                                setOpen((prev) => ({
+                                  ...prev,
+                                  [`${item.id}/${child.label}`]: !prev[`${item.id}/${child.label}`],
+                                }))
+                              }
+                            >
+                              <Chevron open={Boolean(open[`${item.id}/${child.label}`])} />
+                            </button>
+                          </div>
+                        ) : (
+                          <Link href={child.href} className={active ? "is-active" : undefined}>
+                            {child.label}
+                          </Link>
+                        )}
+                        {child.children && open[`${item.id}/${child.label}`] && (
                           <ul className="shop-sidebar-sub shop-sidebar-sub--nested">
                             {child.children.map((sub) => (
                               <li key={`${item.id}-${child.label}-${sub.label}`}>

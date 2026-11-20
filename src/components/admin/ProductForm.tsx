@@ -3,8 +3,9 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GalleryEditor } from "@/components/admin/GalleryEditor";
+import { categoryOptions } from "@/lib/category-path";
 
-type Category = { id: string; name: string };
+type Category = { id: string; name: string; parentId?: string | null };
 type VariantInput = { id?: string; name: string; priceNaira: string };
 
 type Props = {
@@ -108,9 +109,9 @@ export function ProductForm({ categories, product }: Props) {
           Section
         </label>
         <select id="categoryId" name="categoryId" className="input" defaultValue={product?.categoryId} required>
-          {categories.map((c) => (
+          {categoryOptions(categories).map((c) => (
             <option key={c.id} value={c.id}>
-              {c.name}
+              {c.label}
             </option>
           ))}
         </select>
