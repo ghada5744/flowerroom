@@ -6,7 +6,12 @@ import { Suspense, useEffect, useState } from "react";
 
 type Cat = { name: string; slug: string };
 
-type NavChild = { href: string; label: string; match?: { param: string; value: string } };
+type NavChild = {
+  href: string;
+  label: string;
+  match?: Record<string, string>;
+  children?: NavChild[];
+};
 type NavLink = { type: "link"; href: string; label: string };
 type NavGroup = {
   type: "group";
@@ -15,6 +20,10 @@ type NavGroup = {
   children: NavChild[];
 };
 type NavItem = NavLink | NavGroup;
+
+function typeChild(category: string, type: string, label: string): NavChild {
+  return { href: `/shop/${category}?type=${type}`, label, match: { type } };
+}
 
 function buildNav(categories: Cat[]): NavItem[] {
   const bySlug = Object.fromEntries(categories.map((c) => [c.slug, c]));
@@ -27,13 +36,15 @@ function buildNav(categories: Cat[]): NavItem[] {
       id: "bouquets",
       label: bySlug["hand-tied-bouquets"].name,
       children: [
-        { href: "/shop/hand-tied-bouquets", label: "All Bouquets" },
-        { href: "/product/roses", label: "Roses" },
-        { href: "/product/pink-bouquet", label: "Pink" },
-        { href: "/product/lilac-bouquet", label: "Lilac" },
-        { href: "/product/tropical-bouquet", label: "Tropical" },
-        { href: "/product/ivory-bouquet", label: "Ivory" },
-        { href: "/product/royal-bleu-bouquet", label: "Royal Bleu" },
+        typeChild("hand-tied-bouquets", "mixed", "Mixed Bouquets"),
+        {
+          ...typeChild("hand-tied-bouquets", "roses", "Roses"),
+          children: (["red", "pink", "white"] as const).map((color) => ({
+            href: `/shop/hand-tied-bouquets?type=roses&color=${color}`,
+            label: color[0].toUpperCase() + color.slice(1),
+            match: { type: "roses", color },
+          })),
+        },
       ],
     });
   }
@@ -46,27 +57,41 @@ function buildNav(categories: Cat[]): NavItem[] {
       {
         href: "/shop/gift-sets?occasion=birthday",
         label: "Birthday",
-        match: { param: "occasion", value: "birthday" },
+        match: { occasion: "birthday" },
       },
       {
         href: "/shop/gift-sets?occasion=anniversary",
         label: "Anniversary",
-        match: { param: "occasion", value: "anniversary" },
+        match: { occasion: "anniversary" },
       },
       {
         href: "/shop/gift-sets?occasion=congratulations",
         label: "Congratulations",
-        match: { param: "occasion", value: "congratulations" },
+        match: { occasion: "congratulations" },
       },
       {
         href: "/shop/gift-sets?occasion=apology",
         label: "Apology",
-        match: { param: "occasion", value: "apology" },
+        match: { occasion: "apology" },
       },
     ],
   });
 
-  for (const slug of ["signature-arrangements", "events-bridal", "sweet-savoury", "plants"] as const) {
+  if (bySlug["signature-arrangements"]) {
+    items.push({
+      type: "group",
+      id: "signature",
+      label: bySlug["signature-arrangements"].name,
+      children: [
+        typeChild("signature-arrangements", "baskets", "Baskets"),
+        typeChild("signature-arrangements", "giant-vases", "Giant Vases"),
+        typeChild("signature-arrangements", "standing-bouquets", "Standing Bouquets"),
+        typeChild("signature-arrangements", "hat-boxes", "Hat Boxes"),
+      ],
+    });
+  }
+
+  for (const slug of ["events-bridal", "sweet-savoury", "plants"] as const) {
     const cat = bySlug[slug];
     if (!cat) continue;
     items.push({
@@ -103,10 +128,11 @@ function isActivePath(pathname: string, href: string) {
 }
 
 function isChildActive(pathname: string, searchParams: URLSearchParams, child: NavChild) {
+  if (child.children?.some((c) => isChildActive(pathname, searchParams, c))) return true;
   if (child.match) {
     return (
       isActivePath(pathname, child.href) &&
-      searchParams.get(child.match.param) === child.match.value
+      Object.entries(child.match).every(([k, v]) => searchParams.get(k) === v)
     );
   }
   return isActivePath(pathname, child.href);
@@ -178,6 +204,22 @@ function ShopSidebarInner({ categories }: { categories: Cat[] }) {
                         <Link href={child.href} className={active ? "is-active" : undefined}>
                           {child.label}
                         </Link>
+                        {child.children && (
+                          <ul className="shop-sidebar-sub shop-sidebar-sub--nested">
+                            {child.children.map((sub) => (
+                              <li key={`${item.id}-${child.label}-${sub.label}`}>
+                                <Link
+                                  href={sub.href}
+                                  className={
+                                    isChildActive(pathname, searchParams, sub) ? "is-active" : undefined
+                                  }
+                                >
+                                  {sub.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </li>
                     );
                   })}

@@ -9,6 +9,13 @@ import { getSiteSettings } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
+/** Shorter tile names for the "Our Complete Range" grid */
+const RANGE_LABELS: Record<string, string> = {
+  "gift-sets": "Gift Sets",
+  "sweet-savoury": "Add-ons",
+  plants: "Plants",
+};
+
 export default async function HomePage() {
   const [allPriced, reviews, faqs, categories, settings] = await Promise.all([
     prisma.product.findMany({
@@ -26,7 +33,17 @@ export default async function HomePage() {
       take: 40,
     }),
     prisma.faq.findMany({ where: { published: true }, orderBy: { sortOrder: "asc" } }),
-    prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),
+    prisma.category.findMany({
+      orderBy: { sortOrder: "asc" },
+      include: {
+        products: {
+          where: { active: true, imageUrl: { not: null } },
+          orderBy: [{ featured: "desc" }, { name: "asc" }],
+          select: { imageUrl: true },
+          take: 1,
+        },
+      },
+    }),
     getSiteSettings(),
   ]);
 
@@ -82,6 +99,31 @@ export default async function HomePage() {
           </aside>
 
           <div className="main-rail-right">
+            <div className="range-block">
+              <div className="range-header">
+                <h2 className="range-heading">Our Complete Range</h2>
+                <p className="range-intro">
+                  Our florists have a complete range of flowers for all occasions. From special
+                  occasions such as birthdays, anniversaries and congratulations, to everyday
+                  occasions such as Just Because, Get Well and Sympathy, we have the perfect
+                  arrangement for every occasion.
+                </p>
+              </div>
+              <div className="range-grid">
+                {categories.map((c) => (
+                  <Link key={c.id} href={`/shop/${c.slug}`} className="range-card">
+                    <div className="range-card-media">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={c.products[0]?.imageUrl || "/images/lilac.jpg"} alt={c.name} loading="lazy" />
+                    </div>
+                    <span className="range-card-title">
+                      {RANGE_LABELS[c.slug] ?? c.name}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
             <ReviewsCarousel reviews={reviews} />
 
             <div className="product-grid mt-8">

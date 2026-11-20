@@ -5,10 +5,11 @@ import { ShopSidebar } from "@/components/ShopSidebar";
 import { ShopSort } from "@/components/ShopSort";
 import { prisma } from "@/lib/prisma";
 import { sortProducts } from "@/lib/sort-products";
+import { filterByType } from "@/lib/shop-filters";
 
 export const dynamic = "force-dynamic";
 
-type Props = { params: Promise<{ category: string }>; searchParams: Promise<{ sort?: string }> };
+type Props = { params: Promise<{ category: string }>; searchParams: Promise<{ sort?: string; type?: string; color?: string }> };
 
 export async function generateMetadata({ params }: Props) {
   const { category } = await params;
@@ -44,12 +45,15 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           ).map((row) => [row.productId, row._sum.quantity ?? 0]),
         )
       : undefined;
-  const products = sp.sort ? sortProducts(cat.products, sp.sort, sales) : cat.products;
+  const filtered = filterByType(category, cat.products, sp.type, sp.color);
+  const products = sp.sort ? sortProducts(filtered.products, sp.sort, sales) : filtered.products;
 
   return (
     <div className="site-wrap py-10 md:py-14">
-      <h1 className="font-display mb-2 text-center text-[2rem] text-ink md:text-[2.5rem]">{cat.name}</h1>
-      {cat.description && (
+      <h1 className="font-display mb-2 text-center text-[2rem] text-ink md:text-[2.5rem]">
+        {filtered.title ?? cat.name}
+      </h1>
+      {!filtered.title && cat.description && (
         <p className="mx-auto mb-8 max-w-xl text-center text-[15px] text-muted">{cat.description}</p>
       )}
       <div className="main-rail-grid">
@@ -60,6 +64,11 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           <Suspense fallback={null}>
             <ShopSort />
           </Suspense>
+          {products.length === 0 && (
+            <p className="py-10 text-center text-[15px] text-muted">
+              No products here yet — please check back soon or contact us on WhatsApp.
+            </p>
+          )}
           <div className="product-grid">
             {products.map((p) => (
               <ProductCard
