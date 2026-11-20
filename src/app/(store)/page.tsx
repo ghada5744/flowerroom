@@ -4,15 +4,13 @@ import { ProductCard } from "@/components/ProductCard";
 import { ReviewsCarousel, ReviewsSummary } from "@/components/ReviewsStrip";
 import { ShopSidebar } from "@/components/ShopSidebar";
 import { SubscribeStrip } from "@/components/SubscribeStrip";
-import { CategoryGrid } from "@/components/CategoryGrid";
-import { getCategoryTiles } from "@/lib/categories";
 import { prisma } from "@/lib/prisma";
 import { getSiteSettings } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [allPriced, reviews, faqs, tiles, settings] = await Promise.all([
+  const [allPriced, reviews, faqs, categories, settings] = await Promise.all([
     prisma.product.findMany({
       where: {
         active: true,
@@ -28,11 +26,10 @@ export default async function HomePage() {
       take: 40,
     }),
     prisma.faq.findMany({ where: { published: true }, orderBy: { sortOrder: "asc" } }),
-    getCategoryTiles(),
+    prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),
     getSiteSettings(),
   ]);
 
-  const categories = tiles.all;
   const featured = allPriced.slice(0, 4);
   const more = allPriced.slice(4, 8);
 
@@ -85,19 +82,6 @@ export default async function HomePage() {
           </aside>
 
           <div className="main-rail-right">
-            <div className="range-block">
-              <div className="range-header">
-                <h2 className="range-heading">Our Complete Range</h2>
-                <p className="range-intro">
-                  Our florists have a complete range of flowers for all occasions. From special
-                  occasions such as birthdays, anniversaries and congratulations, to everyday
-                  occasions such as Just Because, Get Well and Sympathy, we have the perfect
-                  arrangement for every occasion.
-                </p>
-              </div>
-              <CategoryGrid tiles={tiles.topLevel} />
-            </div>
-
             <ReviewsCarousel reviews={reviews} />
 
             <div className="product-grid mt-8">

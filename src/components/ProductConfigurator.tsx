@@ -36,6 +36,7 @@ function hasOwnPhoto(url: string | null | undefined) {
   return url.startsWith("/uploads/") || url.includes("supabase.co");
 }
 
+/** "Large — Pink" → ["Large", "Pink"] */
 function splitName(name: string): [string, string] | null {
   const parts = name.split(" — ");
   return parts.length === 2 ? [parts[0].trim(), parts[1].trim()] : null;
@@ -121,19 +122,20 @@ export function ProductConfigurator({
     () => variants.find((v) => v.id === variantId) || variants[0],
     [variants, variantId],
   );
-  // "Large — Pink" style names → two short rows (Size + Colour) instead of one big grid
+  // "Large — Pink" style options → a Size row + a Colour row instead of every combination
   const split = useMemo(() => {
     const parts = variants.map((v) => splitName(v.name));
     if (variants.length < 4 || parts.some((p) => !p)) return null;
     const sizes = [...new Set(parts.map((p) => p![0]))];
-    const options = [...new Set(parts.map((p) => p![1]))];
-    if (sizes.length < 2 || options.length < 2) return null;
-    return { sizes, options };
+    const colours = [...new Set(parts.map((p) => p![1]))];
+    if (sizes.length < 2 || colours.length < 2) return null;
+    return { sizes, colours };
   }, [variants]);
+  const [selSize, selColour] = (selected && splitName(selected.name)) || ["", ""];
 
-  function pickSplit(size: string, opt: string) {
+  function pick(size: string, colour: string) {
     const match =
-      variants.find((v) => v.name === `${size} — ${opt}`) ||
+      variants.find((v) => v.name === `${size} — ${colour}`) ||
       variants.find((v) => splitName(v.name)?.[0] === size);
     if (match) setVariantId(match.id);
   }
@@ -222,21 +224,22 @@ export function ProductConfigurator({
         </p>
       )}
 
-      {variants.length > 1 && !enquireOnly && split && selected && (
+      {split && !enquireOnly && (
         <>
           <div>
             <p className="mb-2 text-[12px] font-semibold tracking-[0.12em] text-muted uppercase">Size</p>
-            <div className="choice-pills">
+            <div className="size-options">
               {split.sizes.map((size) => {
-                const active = splitName(selected.name)?.[0] === size;
+                const price = variants.find((v) => splitName(v.name)?.[0] === size)?.priceKobo ?? 0;
                 return (
                   <button
                     key={size}
                     type="button"
-                    onClick={() => pickSplit(size, splitName(selected.name)![1])}
-                    className={`choice-pill ${active ? "is-active" : ""}`}
+                    onClick={() => pick(size, selColour)}
+                    className={`option-chip ${size === selSize ? "is-active" : ""}`}
                   >
-                    {size}
+                    <span className="block">{size}</span>
+                    {price > 0 && <span className="option-chip-price">{formatNaira(price)}</span>}
                   </button>
                 );
               })}
@@ -244,29 +247,26 @@ export function ProductConfigurator({
           </div>
           <div>
             <p className="mb-2 text-[12px] font-semibold tracking-[0.12em] text-muted uppercase">Colour</p>
-            <div className="choice-pills">
-              {split.options.map((opt) => {
-                const active = splitName(selected.name)?.[1] === opt;
-                return (
-                  <button
-                    key={opt}
-                    type="button"
-                    onClick={() => pickSplit(splitName(selected.name)![0], opt)}
-                    className={`choice-pill ${active ? "is-active" : ""}`}
-                  >
-                    {opt}
-                  </button>
-                );
-              })}
+            <div className="size-options">
+              {split.colours.map((colour) => (
+                <button
+                  key={colour}
+                  type="button"
+                  onClick={() => pick(selSize, colour)}
+                  className={`option-chip ${colour === selColour ? "is-active" : ""}`}
+                >
+                  <span className="block">{colour}</span>
+                </button>
+              ))}
             </div>
           </div>
         </>
       )}
 
-      {variants.length > 1 && !enquireOnly && !split && (
+      {!split && variants.length > 1 && !enquireOnly && (
         <div>
           <p className="mb-2 text-[12px] font-semibold tracking-[0.12em] text-muted uppercase">Size</p>
-          <div className="choice-pills">
+          <div className="size-options">
             {variants.map((v) => {
               const active = v.id === variantId;
               return (
@@ -274,9 +274,10 @@ export function ProductConfigurator({
                   key={v.id}
                   type="button"
                   onClick={() => setVariantId(v.id)}
-                  className={`choice-pill ${active ? "is-active" : ""}`}
+                  className={`option-chip ${active ? "is-active" : ""}`}
                 >
-                  {v.name}
+                  <span className="block">{v.name}</span>
+                  {v.priceKobo > 0 && <span className="option-chip-price">{formatNaira(v.priceKobo)}</span>}
                 </button>
               );
             })}

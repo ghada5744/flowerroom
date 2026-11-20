@@ -1986,119 +1986,6 @@ a {
   opacity: 0.75;
 }
 
-/* Simple size / colour pills on the product page */
-.choice-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-}
-
-.choice-pill {
-  border: 1px solid #d8d2c8;
-  background: #fff;
-  color: #222;
-  padding: 0.5rem 0.95rem;
-  font-size: 13px;
-  line-height: 1.2;
-  cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
-}
-
-.choice-pill:hover {
-  border-color: #1a1a1a;
-}
-
-.choice-pill.is-active {
-  border-color: #1a1a1a;
-  background: #1a1a1a;
-  color: #fff;
-}
-
-/* "Our Complete Range" — values taken from flowers.ae/pages/complete-range-thumbnails */
-.range-block {
-  display: grid;
-  gap: 2rem;
-  margin: 32px 0;
-  font-family: Helvetica, Arial, sans-serif;
-  color: #000;
-}
-
-.range-header {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.range-heading {
-  margin: 0 0 0.5rem;
-  font-family: inherit;
-  font-size: 1.5rem;
-  font-weight: 500;
-  line-height: 1.2;
-  text-align: center;
-  color: #000;
-}
-
-.range-intro {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.5;
-  text-align: left;
-  color: #000;
-}
-
-.range-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: start;
-  gap: 2rem;
-}
-
-.range-card {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  justify-content: flex-start;
-  align-items: center;
-  color: #000;
-  text-decoration: none;
-}
-
-.range-card-media {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-}
-
-.range-card-media img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.range-card-title {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.3;
-  text-align: center;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  color: #000;
-}
-
-@media (min-width: 491px) {
-  .range-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 990px) {
-  .range-heading {
-    font-size: 2rem;
-  }
-}
-
 .size-options {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2174,22 +2061,6 @@ a {
 }
 
 /* Related products — between compact and full shop grid */
-/* Category page (after clicking a category): square photos like flowers.ae */
-.product-grid--category {
-  gap: 2rem 1.25rem;
-}
-
-.product-grid--category .product-card-media {
-  aspect-ratio: 1 / 1;
-}
-
-@media (min-width: 1100px) {
-  .product-grid--category {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2.5rem 1.75rem;
-  }
-}
-
 .product-grid--compact {
   max-width: 1120px;
   margin-left: auto;
@@ -3462,5 +3333,90 @@ a {
 
   .main-rail-left {
     display: none;
+  }
+}
+
+/* "Our Complete Range" — values taken from flowers.ae/pages/complete-range-thumbnails */
+.range-block {
+  display: grid;
+  gap: 2rem;
+  margin: 32px 0;
+  font-family: Helvetica, Arial, sans-serif;
+  color: #000;
+}
+
+.range-header {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.range-heading {
+  margin: 0 0 0.5rem;
+  font-family: inherit;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+  color: #000;
+}
+
+.range-intro {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: left;
+  color: #000;
+}
+
+.range-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 2rem;
+}
+
+.range-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: flex-start;
+  align-items: center;
+  color: #000;
+  text-decoration: none;
+}
+
+.range-card-media {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.range-card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.range-card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  color: #000;
+}
+
+@media (min-width: 491px) {
+  .range-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 990px) {
+  .range-heading {
+    font-size: 2rem;
   }
 }

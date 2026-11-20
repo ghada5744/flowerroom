@@ -1,7 +1,9 @@
 import { Suspense } from "react";
+import { CategoryGrid } from "@/components/CategoryGrid";
 import { ProductCard } from "@/components/ProductCard";
 import { ShopSidebar } from "@/components/ShopSidebar";
 import { ShopSort } from "@/components/ShopSort";
+import { getCategoryTiles } from "@/lib/categories";
 import { prisma } from "@/lib/prisma";
 import { sortProducts } from "@/lib/sort-products";
 
@@ -13,6 +15,35 @@ type Props = { searchParams: Promise<{ q?: string; min?: string; max?: string; s
 
 export default async function ShopAllPage({ searchParams }: Props) {
   const sp = await searchParams;
+
+  // Plain "Our Complete Range" (no search / price filter) = category photos, like flowers.ae
+  if (!sp.q && !sp.min && !sp.max && !sp.sort) {
+    const tiles = await getCategoryTiles();
+    return (
+      <div className="site-wrap py-10 md:py-14">
+        <div className="main-rail-grid">
+          <aside className="main-rail-left">
+            <ShopSidebar categories={tiles.all} />
+          </aside>
+          <div className="main-rail-right">
+            <div className="range-block">
+              <div className="range-header">
+                <h1 className="range-heading">Our Complete Range</h1>
+                <p className="range-intro">
+                  Our florists have a complete range of flowers for all occasions. From special
+                  occasions such as birthdays, anniversaries and congratulations, to everyday
+                  occasions such as Just Because, Get Well and Sympathy, we have the perfect
+                  arrangement for every occasion.
+                </p>
+              </div>
+              <CategoryGrid tiles={tiles.topLevel} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const [categories, products] = await Promise.all([
     prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),
     prisma.product.findMany({

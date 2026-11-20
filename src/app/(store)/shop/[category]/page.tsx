@@ -81,7 +81,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
               <Suspense fallback={null}>
                 <ShopSort />
               </Suspense>
-              <div className="product-grid product-grid--category">
+              <div className="product-grid">
                 {products.map((p) => (
                   <ProductCard
                     key={p.id}
