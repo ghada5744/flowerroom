@@ -1,16 +1,18 @@
 import Link from "next/link";
+import { CategoryGrid } from "@/components/CategoryGrid";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ProductCard } from "@/components/ProductCard";
 import { ReviewsCarousel, ReviewsSummary } from "@/components/ReviewsStrip";
 import { ShopSidebar } from "@/components/ShopSidebar";
 import { SubscribeStrip } from "@/components/SubscribeStrip";
+import { getCategoryTiles } from "@/lib/categories";
 import { prisma } from "@/lib/prisma";
 import { getSiteSettings } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [allPriced, reviews, faqs, categories, settings] = await Promise.all([
+  const [allPriced, reviews, faqs, tiles, settings] = await Promise.all([
     prisma.product.findMany({
       where: {
         active: true,
@@ -26,7 +28,7 @@ export default async function HomePage() {
       take: 40,
     }),
     prisma.faq.findMany({ where: { published: true }, orderBy: { sortOrder: "asc" } }),
-    prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),
+    getCategoryTiles(),
     getSiteSettings(),
   ]);
 
@@ -76,12 +78,26 @@ export default async function HomePage() {
             <div className="main-rail-left-sticky">
               <ReviewsSummary total={reviews.length} />
               <div className="main-rail-nav">
-                <ShopSidebar categories={categories} />
+                <ShopSidebar categories={tiles.all} />
               </div>
             </div>
           </aside>
 
           <div className="main-rail-right">
+            {/* flowers.ae: "Our Complete Range" photos first */}
+            <div className="range-block">
+              <div className="range-header">
+                <h2 className="range-heading">Our Complete Range</h2>
+                <p className="range-intro">
+                  Our florists have a complete range of flowers for all occasions. From special
+                  occasions such as birthdays, anniversaries and congratulations, to everyday
+                  occasions such as Just Because, Get Well and Sympathy, we have the perfect
+                  arrangement for every occasion.
+                </p>
+              </div>
+              <CategoryGrid tiles={tiles.topLevel} />
+            </div>
+
             <ReviewsCarousel reviews={reviews} />
 
             <div className="product-grid mt-8">
