@@ -3420,3 +3420,39 @@ a {
     font-size: 2rem;
   }
 }
+
+/* Text under "Our Complete Range" — layout of flowers.ae/pages/complete-range-thumbnails */
+.range-seo {
+  margin-top: 2.5rem;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  color: #000;
+}
+
+.range-seo h2 {
+  margin: 2rem 0 0.15rem;
+  font-family: inherit;
+  font-size: 1.35rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: #000;
+}
+
+.range-seo h2:first-child {
+  margin-top: 0;
+}
+
+.range-seo p {
+  margin: 0 0 1.25rem;
+}
+
+.range-seo a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.range-seo b {
+  font-weight: 700;
+}
