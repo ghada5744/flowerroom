@@ -474,6 +474,28 @@ a {
   padding: 1.25rem;
 }
 
+/* Phone: smaller dashboard boxes, 2 per row */
+@media (max-width: 639px) {
+  .admin-stat-card {
+    padding: 0.75rem;
+    min-width: 0;
+  }
+  .admin-stat-card > p:first-child {
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  .admin-stat-card > p.font-display {
+    margin-top: 0.25rem;
+    font-size: 1.35rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  .admin-stat-card > a {
+    margin-top: 0.25rem;
+    font-size: 11px;
+  }
+}
+
 .admin-upload-trigger {
   display: inline-flex;
   align-items: center;

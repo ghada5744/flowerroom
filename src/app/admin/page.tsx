@@ -48,7 +48,7 @@ export default async function AdminDashboard() {
         </Link>
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-5">
         <div className="admin-stat-card">
           <p className="text-xs uppercase tracking-wider text-muted">Undelivered orders</p>
           <p className="font-display mt-2 text-3xl text-magenta">{undeliveredCount}</p>
