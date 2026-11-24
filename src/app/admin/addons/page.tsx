@@ -11,10 +11,10 @@ export default async function AdminAddonsPage() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl">Additions (like flowers.ae)</h1>
+      <h1 className="font-display text-3xl">Additions</h1>
       <p className="mt-2 text-sm text-muted">
         Cards, treats and balloons appear separately on bouquet/box pages (“Select card”, “Add a
-        treat”, “Add balloons”). Set real ₦ prices when she confirms. Gift sets already include cake +
+        treat”, “Add balloons”). Set the ₦ price of each one here. Gift sets already include cake +
         card + balloons — those product pages hide this section.
       </p>
       <div className="mt-6">
